@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Options</title>
+
+    <link rel="stylesheet" href="css/match-options.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/common.css">
+
+    <script src="js/match-options.js" defer></script>
+</head>
+
+<body>
+    <section class="section" id="match-options-section">
+        <header class="section-heading">
+            Match Options
+            <hr class="line">
+        </header>
+
+        <section class="options-cont">
+            <section class="options-row">
+                <div class="team-select option" id="team-green-option">
+                    <label class="header team-green-header">Team Green</label>
+                </div>
+
+                <div class="option">
+                    <label class="header">Category</label>
+                    <div class="cards-side-by-side" id="category-cont">
+                        <div class="card category-card selected">Men's</div>
+                        <div class="card category-card">Women's</div>
+                    </div>
+                </div>
+
+                <div class="option" id="number-of-sets-option">
+                    <label class="header">Number of Sets</label>
+
+                </div>
+
+                <div class="option">
+                    <label class="header">Allow Deuce</label>
+                    <div class="cards-side-by-side">
+                        <div class="card allow-deuce selected">Yes</div>
+                        <div class="card allow-deuce">No</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="options-row">
+                <div class="team-select option" id="team-orange-option">
+                    <label class="header team-orange-header">Team Orange</label>
+                </div>
+
+                <div class="option">
+                    <label class="header">Type</label>
+                    <div class="cards-side-by-side" id="type-cont">
+                        <div class="card type-card selected">Singles</div>
+                        <div class="card type-card">Doubles</div>
+                    </div>
+                </div>
+
+                <div class="option">
+                    <label class="header">Points per set</label>
+                    <input type="number" class="input-box" id="points-per-set-input" value=21>
+                </div>
+
+                <div class="option">
+                    <label class="header">Interval during match</label>
+                    <div class="cards-side-by-side" id="interval-cont">
+                        <div class="card interval-card selected">Yes</div>
+                        <div class="card interval-card">No</div>
+                    </div>
+                </div>
+            </section>
+
+        </section>
+        
+        <button class="primary-action-btn" id="next-btn">Next</button>
+
+    </section>
+
+</body>
+
+</html>

@@ -1,0 +1,81 @@
+#scorecard-section {
+    gap: 2.5rem;
+}
+
+.sub-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.opponents-cont {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    /* gap: 5rem; */
+    border-radius: 10px;
+    /* border: 1px solid white; */
+}
+
+.opponent-cont {
+    display: flex;
+    flex-direction: column;
+    width: 13rem;
+    gap: 0.5rem;
+    padding: 1.5rem;
+}
+.green-opponent-cont {
+    align-items: flex-start;
+    background-color: var(--green-bg);
+    border-radius: 10px 0px 0px 10px;
+}
+.orange-opponent-cont {
+    align-items: flex-end;
+    background-color: var(--orange-bg);
+    border-radius: 0px 10px 10px 0px;
+}
+
+.opponents-cont::after {
+    content: "vs";
+    position: absolute;
+    top: 40%;
+    left: 48%;
+    z-index: 10;
+    font-size: 1.2rem;
+}
+
+.results-cont {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+}
+
+.player-cont {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.player-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.set-scores {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    border-radius: 10px;
+}
+.set-score {
+    font-family: var(--secondary-font);
+    font-size: 1rem;
+}
+
+.winner-section {
+    padding: 1rem 3rem;
+    border-radius: 10px;
+}

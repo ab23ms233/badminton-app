@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,100..900;1,100..900&family=Unbounded:wght@200..900&display=swap');
+
+body {
+    background-color: #080808;
+    color: #ffffff;
+    font-family: "Unbounded", sans-serif;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5rem;
+}
+
+.header {
+    font-family: var(--primary-font);
+    font-weight: bold;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: var(--option-header-color);
+}
+
+.team-green-header {
+    color: var(--green);
+    text-transform: uppercase;
+    font-size: 1rem;
+}
+.team-orange-header {
+    color: var(--orange);
+    text-transform: uppercase;
+    font-size: 1rem;
+}
+
+.primary-action-btn {
+    font-family: var(--primary-font);
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border: none;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    border-radius: 10px;
+    padding: 0.5rem;
+}
+
+.primary-action-btn:hover {
+    cursor: pointer;
+    background-color: #0066ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(57, 132, 244, 0.25);
+}
+.primary-action-btn:active {
+    background-color: var(--primary-color);
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.secondary-action-btn {
+    background-color: var(--card-bg-color);
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    font-family: var(--primary-font);
+    border: 1px solid var(--primary-color);
+    border-radius: 10px;
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+}
+.secondary-action-btn:hover {
+    background-color: var(--primary-card-bg-hover);
+    cursor: pointer;
+    transform: translateY(-2px);
+}
+
+.section-heading {
+    font-family: var(--primary-font);
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    text-align: center;
+}
+.line {
+    width: 40%;
+    height: 2px;
+    background-color: var(--primary-color);
+    border: none;
+}
+
+.dropdown:hover {
+    cursor: pointer;
+}
+.dropdown {
+    width: 100%;
+    background-color: var(--card-bg-color);
+    font-family: var(--secondary-font);
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: 10px;
+}
+
+.team-green-select {
+    border: 2px solid var(--green);
+    color: var(--green);
+}
+
+.team-green-select:focus {
+    /* border: 2px solid var(--green); */
+    outline: 1px solid var(--green);
+    /* color: var(--green); */
+}
+.team-orange-select {
+    border: 2px solid var(--orange);
+    color: var(--orange);
+}
+.team-orange-select:focus {
+    /* border: 2px solid var(--orange); */
+    outline: 1px solid var(--orange);
+    /* color: var(--orange); */
+}
+
+.option {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    /* width: 40%; */
+}
+
+.green-player {
+    color: var(--green);
+}
+.orange-player {
+    color: var(--orange);
+}
+
+.green-bg {
+    background-color: var(--green-bg);
+}
+.orange-bg {
+    background-color: var(--orange-bg);
+}
+
+.green-border {
+    border: 2px solid var(--green)
+}
+.orange-border {
+    border: 2px solid var(--orange);
+}

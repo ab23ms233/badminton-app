@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scorer</title>
+
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/scorer.css">
+    <link rel="stylesheet" href="css/common.css">
+
+    <script src="js/scorer.js" defer></script>
+</head>
+
+<body>
+    <section class="section scorer-shell" id="scorer-section">
+        <div class="upper-part">
+            <header class="scorer-heading">Men's Singles</header>
+
+            <div class="match-result">
+                <div class="player-scores green-player-scores">
+                    <div class="player-name-in-set-score green-player" id="green-player-name-in-set-score">
+                        Player A
+                    </div>
+                    <div class="set-scores" id="green-set-scores"></div>
+                </div>
+
+                <hr class="set-score-line">
+
+                <div class="player-scores green-player-scores">
+                    <div class="player-name-in-set-score orange-player" id="green-player-name-in-set-score">
+                        Player B
+                    </div>
+                    <div class="set-scores" id="orange-set-scores"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="overlay set-result-overlay is-div-hidden">
+            <div class="set-result-interface interface">
+                <div class="set-result-message message">
+                    <span class="set-num">Set-1</span>
+                    <span>won by</span>
+                    <span class="winner-name set-winner-name">Player A</span>
+                </div>
+                <button class="primary-action-btn" id="next-set-btn">
+                    Next Set
+                </button>
+            </div>
+        </div>
+
+        <div class="overlay match-result-overlay is-div-hidden">
+            <div class="match-result-interface interface">
+                <div class="match-result-message message">
+                    Match won by
+                    <span class="match-winner-name">Player A</span>
+                </div>
+
+                <div class="final-set-score">
+                    <span class="final-green-sets green-player">2</span>
+                    <span class="dash">-</span>
+                    <span class="final-orange-sets orange-player-name">1</span>
+                </div>
+
+                <div class="btns-row">
+                    <button class="primary-action-btn" id="view-scorecard-btn">
+                        View Scorecard
+                    </button>
+                    <button class="secondary-action-btn" id="new-match-btn">
+                        New Match
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="overlay interval-overlay is-div-hidden">
+            <div class="interval-interface interface">
+                <div class="message interval-message">
+                    Interval
+                </div>
+
+                <div class="interval-options">
+                    <button class="control-btn interval-btn" id="reset-interval-btn">
+                        <img src="icons/reset.svg" alt="Reset">
+                    </button>
+                    <div class="interval-timer">01:00</div>
+                    <button class="control-btn interval-btn" id="pause-interval-btn">
+                        <img src="icons/pause.svg" alt="Pause" id="interval-pause-icon">
+                    </button>
+                </div>
+
+                <button class="primary-action-btn" id="continue-btn">
+                    Continue
+                </button>
+
+            </div>
+        </div>
+
+        <div class="scoring-interface">
+            <hr class="scorer-line">
+
+            <div class="points-interface">
+                <div class="player-side" id="green-side">
+                    <button class="one-point green-bg" id="green-one-point">
+                        +1
+                    </button>
+                    <div class="player-info">
+                        <div class="player-name-in-match green-player" id="green-player-name-in-match">Player A
+                        </div>
+                        <div class="point-and-serve">
+                            <div class="point" id="green-point">16</div>
+                            <div class="serve current-server"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pre-game-controls">
+                    <button class="pre-game-control" id="change-sides">
+                        <img src="icons/change-sides.svg" alt="Change sides">
+                    </button>
+                    <button class="pre-game-control" id="change-serve">
+                        <img src="icons/change-serve.svg" alt="Change serve">
+                    </button>
+                </div>
+
+                <div class="player-side" id="orange-side">
+                    <div class="player-info">
+                        <div class="player-name-in-match orange-player" id="orange-player-name-in-match">Player B
+                        </div>
+                        <div class="point-and-serve">
+                            <div class="point" id="orange-point">18</div>
+                            <div class="serve"></div>
+                        </div>
+                    </div>
+                    <button class="one-point orange-bg" id="orange-one-point">
+                        +1
+                    </button>
+                </div>
+
+            </div>
+
+            <hr class="scorer-line">
+        </div>
+
+        <div class="game-controls">
+            <!-- <div class="empty">Empty div</div> -->
+            <div class="scoring-options">
+                <button class="control-btn scoring-option-btn" id="undo">
+                    <img src="icons/undo.svg" alt="Undo" id="undo-icon">
+
+                </button>
+                <button class="control-btn scoring-option-btn" id="redo">
+                    <img src="icons/redo.svg" alt="redo" id="redo-icon">
+
+                </button>
+
+                <div class="timer">00:00:00</div>
+
+                <button class="control-btn scoring-option-btn" id="pause">
+                    <img id="pause-icon" src="icons/pause.svg" alt="Pause">
+                </button>
+
+                <button class="control-btn scoring-option-btn" id="exit">
+                    <img src="icons/exit.svg" alt="Exit" id="exit-icon">
+
+                </button>
+            </div>
+
+            <!-- <button class="primary-action-btn is-btn-hidden" id="finish-match-btn">Next Set</button> -->
+        </div>
+
+    </section>
+</body>
+
+</html>
