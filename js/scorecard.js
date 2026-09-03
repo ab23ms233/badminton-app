@@ -1,15 +1,16 @@
-const results = JSON.parse(sessionStorage.getItem("results"))
+const setResults = JSON.parse(sessionStorage.getItem("setResults"))
 const events = JSON.parse(sessionStorage.getItem("events"))
 const playerNames = JSON.parse(sessionStorage.getItem("playerNames"))
 const matchConfig = JSON.parse(sessionStorage.getItem("matchConfig"))
+const matchStats = JSON.parse(sessionStorage.getItem("matchStats"))
 
-const winnerTeam = results.at(-1).winner
+const winnerTeam = matchStats.winner
 const winnerPlayer = playerNames[winnerTeam]
 const teams = ["green", "orange"]
 
-// console.log(winnerTeam)
-// console.log(playerNames)
-// console.log(matchConfig)
+console.log(winnerTeam)
+console.log(playerNames)
+console.log(matchConfig)
 
 // Set player names
 function setPlayerNames() {
@@ -31,7 +32,7 @@ function setTeamNames() {
 // Create results
 function createSetScores() {
     const teams = ["green", "orange"]
-    const numSets = results.length - 1
+    const numSets = setResults.length
     const resultsCont = document.querySelector(".results-cont")
 
     let setWinnerTeam
@@ -40,7 +41,7 @@ function createSetScores() {
         setScoresDiv.classList.add("set-scores")
         setScoresDiv.id = `set-${i + 1}-score`
 
-        setWinnerTeam = results[i].winner
+        setWinnerTeam = setResults[i].winner
         setScoresDiv.classList.add(`${setWinnerTeam}-bg`)
 
         for (let team of teams) {
@@ -54,9 +55,9 @@ function createSetScores() {
 
             let score
             if (team === "green") {
-                score = results[i].greenScore
+                score = setResults[i].greenScore
             } else {
-                score = results[i].orangeScore
+                score = setResults[i].orangeScore
             }
             setScoreDiv.textContent = score
 

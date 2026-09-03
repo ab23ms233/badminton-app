@@ -101,7 +101,7 @@ function createTeamDropDown(teamId) {
 }
 
 // Creates a dropdown menu for selecting the number of sets in a match
-function createSetsDropDown(defaultSet) {
+function createSetsDropDown(numSets, defaultSet) {
     // Create wrapper container for the dropdown
     const wrapper = document.createElement("div")
     wrapper.classList.add("select-wrapper")
@@ -117,8 +117,11 @@ function createSetsDropDown(defaultSet) {
         option.value = set
         option.textContent = set
 
+        console.log(set)
+        console.log(defaultSet)
         // Set the default selected value
         if (set === defaultSet) {
+            console.log(set)
             option.selected = true
         }
 
