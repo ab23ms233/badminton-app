@@ -15,17 +15,22 @@
 
 <body>
     <section class="section" id="match-options-section">
+        <!-- Heading -->
         <header class="section-heading">
             Match Options
             <hr class="line">
         </header>
 
+        <!-- Match options container -->
         <section class="options-cont">
+            <!-- The container is divided into 2 options-row -->
             <section class="options-row">
-                <div class="team-select option" id="team-green-option">
-                    <label class="header team-green-header">Team Green</label>
-                </div>
 
+                <!-- Team green dropdown using js -->
+                <div class="team-select option" id="team-green-option">
+                    <label class="header green-player" id="team-green-header">Team Green</label>
+                </div>
+                <!-- Category -->
                 <div class="option">
                     <label class="header">Category</label>
                     <div class="cards-side-by-side" id="category-cont">
@@ -33,12 +38,11 @@
                         <div class="card category-card">Women's</div>
                     </div>
                 </div>
-
+                <!-- Number of sets -->
                 <div class="option" id="number-of-sets-option">
                     <label class="header">Number of Sets</label>
-
                 </div>
-
+                <!-- Deuce -->
                 <div class="option">
                     <label class="header">Allow Deuce</label>
                     <div class="cards-side-by-side">
@@ -49,10 +53,11 @@
             </section>
 
             <section class="options-row">
+                <!-- Team orange dropdown using js -->
                 <div class="team-select option" id="team-orange-option">
-                    <label class="header team-orange-header">Team Orange</label>
+                    <label class="header orange-player" id="team-orange-header">Team Orange</label>
                 </div>
-
+                <!-- Type -->
                 <div class="option">
                     <label class="header">Type</label>
                     <div class="cards-side-by-side" id="type-cont">
@@ -60,12 +65,12 @@
                         <div class="card type-card">Doubles</div>
                     </div>
                 </div>
-
+                <!-- Points/set -->
                 <div class="option">
                     <label class="header">Points per set</label>
                     <input type="number" class="input-box" id="points-per-set-input" value=21>
                 </div>
-
+                <!-- Interval -->
                 <div class="option">
                     <label class="header">Interval during match</label>
                     <div class="cards-side-by-side" id="interval-cont">
@@ -77,6 +82,7 @@
 
         </section>
         
+        <!-- Next btn -->
         <button class="primary-action-btn" id="next-btn">Next</button>
 
     </section>

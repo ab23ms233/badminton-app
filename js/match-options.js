@@ -1,75 +1,82 @@
-// Start match button
+// Event listener for start match button
 const nextBtn = document.getElementById("next-btn");
 nextBtn.addEventListener("click", recordMatchConfig);
 
-// If start match is clicked
+// Collects all match configuration from the form and validates inputs
 function recordMatchConfig() {
-    // Fetch all match config
+    // Fetch team selection dropdowns
     let teamGreen = document.querySelector(".team-green-select")
     let teamOrange = document.querySelector(".team-orange-select")
 
+    // Validate that both teams have been selected
     if (!teamGreen.value || !teamOrange.value) {
         alert("Please select team names of both teams before proceeding.")
         return
     }
 
+    // Extract team names
     teamGreen = teamGreen.value.trim()
     teamOrange = teamOrange.value.trim()
 
+    // Extract match type and category
     const category = document.querySelector(".category-card.selected").textContent.trim()
     const type = document.querySelector(".type-card.selected").textContent.trim()
 
+    // Extract match rules
     const numOfSets = Number(document.getElementById("number-of-sets").value)
     const pointsPerSet = Number(document.getElementById("points-per-set-input").value)
 
+    // Extract deuce setting
     const allowDeuce = document.querySelector(".allow-deuce.selected").textContent.trim() === "Yes"
 
-    // Store in json
+    // Create match configuration object
     const matchConfig = {
-        greenTeam: teamGreen,
-        orangeTeam: teamOrange,
+        green: teamGreen,
+        orange: teamOrange,
         category: category,
         type: type,
         numOfSets: numOfSets,
         pointsPerSet: pointsPerSet,
         allowDeuce: allowDeuce
     }
-    // console.log(type)
 
-    // Save in browser storage
+    // Save match configuration to browser session storage
     sessionStorage.setItem(
         "matchConfig",
         JSON.stringify(matchConfig)
     )
-    // Change page to player-info
+    // Navigate to player information page
     window.location.href = "player-info.html"
 }
 
-// Change card selection on clicking
+// Handles card selection UI - ensures only one card is selected at a time
 function setCardSelection(selector) {
     const cards = document.querySelectorAll(selector)
 
+    // Add click listener to each card
     cards.forEach(card => {
-        // If card is clicked
         card.addEventListener("click", () => {
-            // Remove selected from all cards
+            // Remove selected state from all cards
             cards.forEach(card => {
                 card.classList.remove("selected")
             })
-            // Select clicked card
+            // Add selected state to clicked card
             card.classList.add("selected")
         })
     })
 }
 
-// Create dropdown menu for team-selection
-function createTeamDropDown(teamId, teams) {
+// Creates a dropdown menu for team selection with all available teams
+function createTeamDropDown(teamId) {
+    // Create wrapper container for the dropdown
     const wrapper = document.createElement("div")
     wrapper.classList.add("select-wrapper")
 
+    // Create select element with appropriate classes
     const select = document.createElement("select")
-    select.classList.add(`${teamId}-select`, "dropdown", "team-select-dropdown")
+    select.classList.add(`team-${teamId}-select`, `thin-${teamId}-border`, "dropdown", "team-select-dropdown")
 
+    // Create placeholder option
     const placeholder = document.createElement("option")
     placeholder.value = ""
     placeholder.textContent = "Choose a team..."
@@ -80,6 +87,7 @@ function createTeamDropDown(teamId, teams) {
     select.appendChild(placeholder)
     select.required = true
 
+    // Populate dropdown with all team names
     teams.forEach(team => {
         const option = document.createElement("option")
         option.value = team
@@ -92,19 +100,24 @@ function createTeamDropDown(teamId, teams) {
     return wrapper
 }
 
-function createSetsDropDown(numSetsArr, defaultSet) {
+// Creates a dropdown menu for selecting the number of sets in a match
+function createSetsDropDown(defaultSet) {
+    // Create wrapper container for the dropdown
     const wrapper = document.createElement("div")
     wrapper.classList.add("select-wrapper")
 
+    // Create select element with unique id
     const select = document.createElement("select")
     select.classList.add("dropdown")
     select.id = "number-of-sets"
 
-    numSetsArr.forEach(set => {
+    // Populate dropdown with available set options
+    numSets.forEach(set => {
         const option = document.createElement("option")
         option.value = set
         option.textContent = set
 
+        // Set the default selected value
         if (set === defaultSet) {
             option.selected = true
         }
@@ -116,24 +129,29 @@ function createSetsDropDown(numSetsArr, defaultSet) {
     return wrapper
 }
 
+// Array of available team options
 const teams = [
     "22MS",
     "23MS",
     "24MS"
 ]
 
-const greenDropDown = createTeamDropDown("team-green", teams)
-const orangeDropDown = createTeamDropDown("team-orange", teams)
+// Create team selection dropdowns for both teams
+const greenDropDown = createTeamDropDown("green")
+const orangeDropDown = createTeamDropDown("orange")
 
+// Insert team dropdowns into the page
 document.getElementById("team-green-option").appendChild(greenDropDown)
 document.getElementById("team-orange-option").appendChild(orangeDropDown)
 
+// Create and insert number of sets dropdown
 const numSets = [1, 3, 5]
 const defaultSet = 3
 const numSetsDropDown = createSetsDropDown(numSets, defaultSet)
 
 document.getElementById("number-of-sets-option").appendChild(numSetsDropDown)
 
+// Setup card selection behavior for match configuration options
 setCardSelection(".category-card")
 setCardSelection(".type-card")
 setCardSelection(".allow-deuce")

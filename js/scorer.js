@@ -13,12 +13,12 @@ sectionHeader.textContent = header
 // Write player names in scoring interface and set-scores interface
 const greenPlayerNames = document.querySelectorAll(".green-player")
 greenPlayerNames.forEach(playerName => {
-    playerName.textContent = playerNames.greenTeam
+    playerName.textContent = playerNames.green
 })
 
 const orangePlayerNames = document.querySelectorAll(".orange-player")
 orangePlayerNames.forEach(playerName => {
-    playerName.textContent = playerNames.orangeTeam
+    playerName.textContent = playerNames.orange
 })
 
 // Array for recording events
@@ -36,10 +36,12 @@ const EVENT_TYPES = {
 
 // Array to store results of sets: {set, greenScore, orangeScore, winner}
 const results = []
+
 // Game configurations
 const pointsPerSet = matchConfig.pointsPerSet
 const numSets = matchConfig.numOfSets
 const setsToWin = Math.ceil(numSets / 2)
+let totalDuration = 0
 
 // Current state of match
 const matchState = {
@@ -51,6 +53,7 @@ const matchState = {
     sidesSwapped: false,
     intervalOver: false,
     intervalPaused: false,
+    setBreakPaused: false
 }
 
 // Prepare the scoring interface for a new set
@@ -62,62 +65,113 @@ function prepareScoringInterface() {
     })
 
     // Initialise timer
-    elapsedSeconds = 0;
+    totalDuration += setTime
+    setTime = 0;
 
     // Set-scores for green and orange
     createSetScoresInterface("green")
     createSetScoresInterface("orange")
 }
 
-// Update timer
-let elapsedSeconds
-const timer = document.querySelector(".timer")
-setInterval(updateTimer, 1000)
+// Update set timer
+let setTime = 0
+const matchTimer = document.getElementById("match-timer")
+setInterval(() => {
+    const skipCondition =
+        (matchState.status !== EVENT_TYPES.ongoing &&
+            matchState.status !== EVENT_TYPES.preGame)
 
+    setTime = updateTimer(
+        setTime,
+        matchTimer,
+        skipCondition,
+        "forward",
+        "hh:mm:ss")
+}, 1000)
+
+// Update interval timer
 let intervalTime = 60
-const intervalTimer = document.querySelector(".interval-timer")
-setInterval(updateIntervalTimer, 1000)
+const intervalTimer = document.getElementById("interval-timer")
+setInterval(() => {
+    const skipCondition =
+        (matchState.status !== EVENT_TYPES.interval ||
+            matchState.intervalPaused)
+
+    intervalTime = updateTimer(
+        intervalTime,
+        intervalTimer,
+        skipCondition,
+        "backward",
+        "mm:ss")
+
+    if (intervalTime === 0) {
+        endInterval()
+    }
+}, 1000)
+
+// Update set break time 
+let setBreakTime = 20
+const setBreakTimer = document.getElementById("set-timer")
+setInterval(() => {
+    const skipCondition =
+        (matchState.status !== EVENT_TYPES.setFinished ||
+            matchState.setBreakPaused
+        )
+
+    setBreakTime = updateTimer(
+        setBreakTime,
+        setBreakTimer,
+        skipCondition,
+        "backward",
+        "mm:ss")
+
+    if (setBreakTime === 0) {
+        prepareNextSet()
+    }
+}, 1000)
+
 
 // Prepare scoring interface
 prepareScoringInterface()
 
-// Update match timer
-function updateTimer() {
-    if (matchState.status != EVENT_TYPES.ongoing) {
-        return
+// Format time into hh:mm:ss
+function formatTime(elapsedSeconds, format) {
+    const minutes = Math.floor((elapsedSeconds % 3600) / 60)
+    const seconds = elapsedSeconds % 60
+
+    // console.log(minutes, seconds)
+    if (format === "hh:mm:ss") {
+        const hours = Math.floor(seconds / 3600)
+        return `${String(hours).padStart(2, "0")}:` +
+            `${String(minutes).padStart(2, "0")}:` +
+            `${String(seconds).padStart(2, "0")}`
+    } else if (format === "mm:ss") {
+        return `${String(minutes).padStart(2, "0")}:` +
+            `${String(seconds).padStart(2, "0")}`
+    } else {
+        return `${String(seconds).padStart(2, "0")}`
     }
-
-    elapsedSeconds++;
-
-    const hours = Math.floor(elapsedSeconds / 3600)
-    const minutes = Math.floor((elapsedSeconds % 3600) / 60);
-    const seconds = elapsedSeconds % 60;
-
-    timer.textContent =
-        `${String(hours).padStart(2, "0")}:` +
-        `${String(minutes).padStart(2, "0")}:` +
-        `${String(seconds).padStart(2, "0")}`;
 }
 
-// Update the interval time
-function updateIntervalTimer() {
-    if (matchState.status !== EVENT_TYPES.interval ||
-        matchState.intervalPaused
-    ) {
-        return
+// Update timer
+function updateTimer(timer, timerElement, skipCondition, direction, format) {
+    // Skip if skip condition is true
+    if (skipCondition) {
+        return timer
     }
-    if (intervalTime === 0) {
-        endInterval()
+    // Increment/decrement timer
+    if (direction === "forward") {
+        timer++
+    } else {
+        timer--
     }
 
-    intervalTime--
-
-    const minutes = Math.floor((intervalTime % 3600) / 60);
-    const seconds = intervalTime % 60;
-
-    intervalTimer.textContent =
-        `${String(minutes).padStart(2, "0")}:` +
-        `${String(seconds).padStart(2, "0")}`;
+    // Update timerElement
+    const timerContent = formatTime(timer, format)
+    // console.log(timerContent)
+    timerElement.textContent = timerContent
+    // Return updated time
+    return timer
 }
 
 // Listen to +1 btn events
@@ -136,7 +190,7 @@ redoBtn.addEventListener("click", redo)
 // Pause
 const pauseBtn = document.getElementById("pause")
 const pauseIcon = document.getElementById("pause-icon")
-pauseBtn.addEventListener("click", togglePause)
+pauseBtn.addEventListener("click", togglePauseMatch)
 
 // Change-sides btn
 const changeSidesBtn = document.getElementById("change-sides")
@@ -171,7 +225,7 @@ continueBtn.addEventListener("click", endInterval)
 // Pause interval
 const intervalPauseBtn = document.getElementById("pause-interval-btn")
 intervalPauseBtn.addEventListener("click", togglePauseInterval)
-const intervalPauseIcon = document.getElementById("interval-pause-icon")
+const intervalPauseIcon = document.getElementById("pause-interval-icon")
 
 // Reset interval
 const resetIntervalBtn = document.getElementById("reset-interval-btn")
@@ -179,11 +233,22 @@ resetIntervalBtn.addEventListener("click", () => {
     intervalTime = 60
 })
 
+// Pause set timer
+const setTimePauseBtn = document.getElementById("pause-set-time-btn")
+setTimePauseBtn.addEventListener("click", togglePauseSetBreak)
+const setTimePauseIcon = document.getElementById("pause-set-time-icon")
+
+// Reset set timer
+const resetSetTimerBtn = document.getElementById("reset-set-time-btn")
+resetSetTimerBtn.addEventListener("click", () => {
+    setBreakTime = 120
+})
+
 // View scorecard
 const viewScorecardBtn = document.getElementById("view-scorecard-btn")
 viewScorecardBtn.addEventListener("click", showScorecard)
 
-// Create Set-scores UI at the top of the page
+// Create set-scores UI at the top of the page
 function createSetScoresInterface(teamId) {
     const setScores = document.getElementById(`${teamId}-set-scores`)
     const preGame = matchState.status === EVENT_TYPES.preGame
@@ -271,22 +336,29 @@ function enableMatchBtns() {
 
 // Toggle between pause and resume interval
 function togglePauseInterval() {
+    let status
     // If interval is ongoing
     if (matchState.intervalPaused) {
         matchState.intervalPaused = false
-        intervalPauseBtn.classList.remove("is-paused")
-        intervalPauseIcon.src = "icons/pause.svg"
-        intervalPauseIcon.alt = "Pause"
-    } 
-    // If interval is paused
-    else {    
-        matchState.intervalPaused = true
-        intervalPauseBtn.classList.add("is-paused")
-        intervalPauseIcon.src = "icons/play.svg"
-        intervalPauseIcon.alt = "Resume"
+        status = "resume"
     }
+    // If interval is paused
+    else {
+        matchState.intervalPaused = true
+        status = "paused"
+    }
+
+    togglePauseIcon(intervalPauseBtn, intervalPauseIcon, status)
 }
 
+function startInterval() {
+    // Show interval overlay
+    intervalOverlay.classList.remove("is-div-hidden")
+    // Disable match btns
+    disableMatchBtns()
+    // Change match status
+    matchState.status = EVENT_TYPES.interval
+}
 // End interval
 function endInterval() {
     // Hide interval overlay
@@ -302,21 +374,22 @@ function endInterval() {
 // Update points and server UI when point changes
 function updateScoreServe() {
     // Update points
-    const greenScore = document.getElementById("green-point")
-    const orangeScore = document.getElementById("orange-point")
-
     const numSet = matchState.currentSet
+    const scores = calculateScore()
+    const [greenPoint, orangePoint] = scores
+
+    const greenScore = document.getElementById(`green-point`)
+    const orangeScore = document.getElementById(`orange-point`)
+    const teamScores = [greenScore, orangeScore]
 
     const greenSetScore = document.getElementById(`set-${numSet}-green-score`)
     const orangeSetScore = document.getElementById(`set-${numSet}-orange-score`)
+    const teamSetScores = [greenSetScore, orangeSetScore]
 
-    const [greenPoint, orangePoint] = calculateScore()
-
-    greenScore.textContent = greenPoint
-    orangeScore.textContent = orangePoint
-
-    greenSetScore.textContent = greenPoint
-    orangeSetScore.textContent = orangePoint
+    for (let i = 0; i < teamScores.length; i++) {
+        teamScores[i].textContent = scores[i];
+        teamSetScores[i].textContent = scores[i];
+    }
 
     // Update server
     const currentServer = matchState.serve
@@ -334,12 +407,7 @@ function updateScoreServe() {
     if ((greenPoint === intervalPoints ||
         orangePoint === intervalPoints) &&
         !matchState.intervalOver) {
-        // Show interval overlay
-        intervalOverlay.classList.remove("is-div-hidden")
-        // Disable match btns
-        disableMatchBtns()
-        // Change match status
-        matchState.status = EVENT_TYPES.interval
+        startInterval()
     }
 
     // if some player reaches final points
@@ -408,26 +476,52 @@ function redo() {
 }
 
 // Toggle between pause and resume
-function togglePause() {
+function togglePauseMatch() {
+    // Disable if set is finished or interval is going on
     if (matchState.status === EVENT_TYPES.setFinished ||
         matchState.status === EVENT_TYPES.interval
     ) {
         return
     }
 
-    if (matchState.status == EVENT_TYPES.pause) {
+    // If match is paused at the time of clicking, unpause
+    if (matchState.status === EVENT_TYPES.pause) {
         matchState.status = EVENT_TYPES.ongoing
-        pauseIcon.src = "icons/pause.svg"
-        pauseIcon.alt = "Pause"
-
-        pauseBtn.classList.remove("is-paused")
     } else {
         matchState.status = EVENT_TYPES.pause
-        pauseIcon.src = "icons/play.svg"
-        pauseIcon.alt = "Resume"
-
-        pauseBtn.classList.add("is-paused")
     }
+
+    togglePauseIcon(pauseBtn, pauseIcon, matchState.status)
+}
+
+// Toggle pause icon
+function togglePauseIcon(btn, icon, status) {
+    if (status !== "paused") {
+        icon.src = "icons/pause.svg"
+        icon.alt = "Pause"
+        btn.classList.remove("is-paused")
+    } else {
+        icon.src = "icons/play.svg"
+        icon.alt = "Resume"
+        btn.classList.add("is-paused")
+    }
+}
+
+function togglePauseSetBreak() {
+    if (matchState.status !== EVENT_TYPES.setFinished) {
+        return
+    }
+
+    let status
+    if (matchState.setBreakPaused) {
+        matchState.setBreakPaused = false
+        status = "resume"
+    } else {
+        matchState.setBreakPaused = true
+        status = "paused"
+    }
+
+    togglePauseIcon(setTimePauseBtn, setTimePauseIcon, status)
 }
 
 // When a set ends
@@ -466,7 +560,8 @@ function endSet(greenScore, orangeScore) {
         set: numSet,
         greenScore: greenScore,
         orangeScore: orangeScore,
-        winner: teamId
+        winner: teamId,
+        duration: setTime
     }
     results.push(result)
 
@@ -475,7 +570,7 @@ function endSet(greenScore, orangeScore) {
         matchState.orangeSets === setsToWin
     ) {
         endMatch()
-    // If only set is won
+        // If only set is won
     } else {
         showSetMessage()
     }
@@ -487,19 +582,13 @@ function showSetMessage() {
     const winnerTeamId = results.at(-1).winner
 
     document.querySelector(".set-result-overlay").classList.remove("is-div-hidden")
-    let numSetMessage, winnerName, winnerColorClass
 
     // Winner name
-    if (winnerTeamId === "green") {
-        winnerName = playerNames.greenTeam
-        winnerColorClass = "green-player"
-    } else {
-        winnerName = playerNames.orangeTeam
-        winnerColorClass = "orange-player"
-    }
+    const winnerName = playerNames[winnerTeamId]
+    const winnerColorClass = `${winnerTeamId}-player`
 
     // Set num
-    numSetMessage = `Set-${matchState.currentSet}`
+    const numSetMessage = `Set-${matchState.currentSet}`
 
     // Show winner message
     numSetElement.textContent = numSetMessage
@@ -521,14 +610,8 @@ function gameEndMessage() {
     const greenSets = document.querySelector(".final-green-sets")
     const orangeSets = document.querySelector(".final-orange-sets")
 
-    let winnerColorClass, winnerName
-    if (winnerTeamId === "green") {
-        winnerColorClass = "green-player"
-        winnerName = playerNames.greenTeam
-    } else {
-        winnerColorClass = "orange-player"
-        winnerName = playerNames.orangeTeam
-    }
+    const winnerName = playerNames[winnerTeamId]
+    const winnerColorClass = `${winnerTeamId}-player`
 
     // Match winner name and color
     matchWinnerNameElement.textContent = winnerName
@@ -597,9 +680,7 @@ function prepareNextSet() {
     // Enable button view
     enableMatchBtns()
 
-    if (matchState.gameUp) {
-
-    }
+    // Update matchstate
     matchState.currentSet++
     matchState.status = EVENT_TYPES.ongoing
     matchState.serve = results.at(-1).winner
@@ -616,17 +697,18 @@ function endMatch() {
     gameEndMessage()
 
     // Check match winning team
-    let winningTeam
+    let matchSummary
     if (matchState.greenSets === setsToWin) {
-        winningTeam = {
+        matchSummary = {
             winner: "green"
         }
     } else {
-        winningTeam = {
+        matchSummary = {
             winner: "orange"
         }
     }
-    results.push(winningTeam)
+    matchSummary.totalDuration = totalDuration
+    results.push(matchSummary)
 
     // Store results
     sessionStorage.setItem(

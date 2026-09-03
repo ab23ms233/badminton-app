@@ -9,6 +9,11 @@
     width: 50%;
     gap: 1rem;
 }
+.team-header {
+    font-size: 1rem;
+    text-transform: uppercase;
+    font-weight: bold;
+}
 
 #start-match-btn {
     width: 15rem;

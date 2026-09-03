@@ -38,6 +38,29 @@
 
         </div>
 
+        <div class="overlay interval-overlay is-div-hidden">
+            <div class="interval-interface interface">
+                <div class="message interval-message">
+                    Interval
+                </div>
+
+                <div class="timer-options" id="interval-options">
+                    <button class="control-btn interval-btn" id="reset-interval-btn">
+                        <img src="icons/reset.svg" alt="Reset">
+                    </button>
+                    <div class="timer" id="interval-timer">01:00</div>
+                    <button class="control-btn interval-btn" id="pause-interval-btn">
+                        <img src="icons/pause.svg" alt="Pause" id="pause-interval-icon">
+                    </button>
+                </div>
+
+                <button class="primary-action-btn" id="continue-btn">
+                    Continue
+                </button>
+
+            </div>
+        </div>
+
         <div class="overlay set-result-overlay is-div-hidden">
             <div class="set-result-interface interface">
                 <div class="set-result-message message">
@@ -45,6 +68,18 @@
                     <span>won by</span>
                     <span class="winner-name set-winner-name">Player A</span>
                 </div>
+                <div class="timer-options" id="set-timer-options">
+                    <button class="control-btn set-timer-btn" id="reset-set-time-btn">
+                        <img src="icons/reset.svg" alt="Reset">
+                    </button>
+
+                    <div class="timer" id="set-timer">01:00</div>
+
+                    <button class="control-btn set-timer-btn" id="pause-set-time-btn">
+                        <img src="icons/pause.svg" alt="Pause" id="pause-set-time-icon">
+                    </button>
+                </div>
+                
                 <button class="primary-action-btn" id="next-set-btn">
                     Next Set
                 </button>
@@ -76,35 +111,12 @@
             </div>
         </div>
 
-        <div class="overlay interval-overlay is-div-hidden">
-            <div class="interval-interface interface">
-                <div class="message interval-message">
-                    Interval
-                </div>
-
-                <div class="interval-options">
-                    <button class="control-btn interval-btn" id="reset-interval-btn">
-                        <img src="icons/reset.svg" alt="Reset">
-                    </button>
-                    <div class="interval-timer">01:00</div>
-                    <button class="control-btn interval-btn" id="pause-interval-btn">
-                        <img src="icons/pause.svg" alt="Pause" id="interval-pause-icon">
-                    </button>
-                </div>
-
-                <button class="primary-action-btn" id="continue-btn">
-                    Continue
-                </button>
-
-            </div>
-        </div>
-
         <div class="scoring-interface">
             <hr class="scorer-line">
 
             <div class="points-interface">
                 <div class="player-side" id="green-side">
-                    <button class="one-point green-bg" id="green-one-point">
+                    <button class="one-point green-bg thin-green-border" id="green-one-point">
                         +1
                     </button>
                     <div class="player-info">
@@ -135,7 +147,7 @@
                             <div class="serve"></div>
                         </div>
                     </div>
-                    <button class="one-point orange-bg" id="orange-one-point">
+                    <button class="one-point orange-bg thin-orange-border" id="orange-one-point">
                         +1
                     </button>
                 </div>
@@ -146,7 +158,6 @@
         </div>
 
         <div class="game-controls">
-            <!-- <div class="empty">Empty div</div> -->
             <div class="scoring-options">
                 <button class="control-btn scoring-option-btn" id="undo">
                     <img src="icons/undo.svg" alt="Undo" id="undo-icon">
@@ -157,7 +168,7 @@
 
                 </button>
 
-                <div class="timer">00:00:00</div>
+                <div class="timer" id="match-timer">00:00:00</div>
 
                 <button class="control-btn scoring-option-btn" id="pause">
                     <img id="pause-icon" src="icons/pause.svg" alt="Pause">
@@ -168,8 +179,6 @@
 
                 </button>
             </div>
-
-            <!-- <button class="primary-action-btn is-btn-hidden" id="finish-match-btn">Next Set</button> -->
         </div>
 
     </section>

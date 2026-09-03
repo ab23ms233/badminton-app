@@ -18,12 +18,13 @@
     box-sizing: border-box;
 }
 
-#green-arrow {
+/* #green-arrow {
     color: var(--green);
 }
 #orange-arrow {
     color: var(--orange);
-}
+} */
+ 
 .cards-side-by-side {
     display: flex;
     flex-direction: row;

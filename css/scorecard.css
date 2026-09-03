@@ -64,12 +64,14 @@
 }
 
 .set-scores {
+    position: relative;
     display: flex;
     flex-direction: row;
     gap: 0.5rem;
     padding: 0.8rem;
     border-radius: 10px;
 }
+
 .set-score {
     font-family: var(--secondary-font);
     font-size: 1rem;

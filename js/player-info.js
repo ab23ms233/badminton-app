@@ -1,19 +1,19 @@
+// Database of available players for each team
 const teams = {
     "22MS": ["Shashank", "Aviyank"],
     "23MS": ["Arya", "Giri"],
     "24MS": ["Sanjib", "Suchir"]
 }
 
+// Fetch match configurations from session storage
 const matchConfig = JSON.parse(sessionStorage.getItem("matchConfig"))
 const type = matchConfig.type.toLowerCase()
-// console.log(type)
 
-const greenTeam = matchConfig.greenTeam
-const orangeTeam = matchConfig.orangeTeam
+// Extract team names from match configuration
+const greenTeam = matchConfig.green
+const orangeTeam = matchConfig.orange
 
-// console.log(greenTeam)
-// console.log(orangeTeam)
-
+// Generate player selection interface based on match type
 if (type === "singles") {
     playerInfoForTeams("singles")
 }
@@ -21,17 +21,30 @@ else if (type === "doubles") {
     playerInfoForTeams("doubles")
 }
 
+// Event listener for start match button
 const startMatchBtn = document.getElementById("start-match-btn")
 startMatchBtn.addEventListener("click", recordPlayerNames)
 
-function createPlayerDropDown(teamId, team, num) {
+// Creates a dropdown menu for selecting a player from the team
+function createPlayerDropDown(teamId, num) {
+    // Determine which team name to use
+    let teamName
+    if (teamId === "green") {
+        teamName = greenTeam
+    } else {
+        teamName = orangeTeam
+    }
+    
+    // Create wrapper container for the dropdown
     const wrapper = document.createElement("div")
     wrapper.classList.add("select-wrapper")
 
+    // Create select element with appropriate classes and unique id
     const select = document.createElement("select")
-    select.classList.add(`${teamId}-select`, "dropdown", "player-drop-down")
-    select.id = `${teamId}-player-dropdown-${num}`
+    select.classList.add(`team-${teamId}-select`, `thin-${teamId}-border`, "dropdown", "player-drop-down")
+    select.id = `team-${teamId}-player-dropdown-${num}`
 
+    // Create placeholder option
     const placeholder = document.createElement("option")
     placeholder.value = ""
     placeholder.disabled = true
@@ -41,7 +54,8 @@ function createPlayerDropDown(teamId, team, num) {
 
     select.appendChild(placeholder)
 
-    const playerList = teams[team]
+    // Populate dropdown with available players from the team
+    const playerList = teams[teamName]
     playerList.forEach(player => {
         const option = document.createElement("option")
         option.value = player
@@ -54,28 +68,35 @@ function createPlayerDropDown(teamId, team, num) {
     return wrapper
 }
 
+
+// Generates player selection interface based on match type (singles or doubles)
 function playerInfoForTeams(type) {
+    // Fetch player form sections for both teams
     const greenPlayerForm = document.getElementById("team-green-player-form")
     const orangePlayerForm = document.getElementById("team-orange-player-form")
 
-    const greenHeader = document.querySelector(".team-green-header")
+    // Update team headers with team names
+    const greenHeader = document.getElementById("team-green-header")
     greenHeader.textContent = greenTeam
 
-    const orangeHeader = document.querySelector(".team-orange-header")
+    const orangeHeader = document.getElementById("team-orange-header")
     orangeHeader.textContent = orangeTeam
 
+    // Create player selection UI based on match type
     if (type === "singles") {
-        const greenPlayer = playerInfo(type, 1, "team-green", greenTeam)
+        // For singles: one player per team
+        const greenPlayer = playerInfo(type, 1, "green")
         greenPlayerForm.appendChild(greenPlayer)
         greenPlayerForm.classList.add("option")
 
-        const orangePlayer = playerInfo(type, 2, "team-orange", orangeTeam)
+        const orangePlayer = playerInfo(type, 2, "orange")
         orangePlayerForm.appendChild(orangePlayer)
         orangePlayerForm.classList.add("option")
     }
     else if (type === "doubles") {
-        const greenPlayer1 = playerInfo(type, 1, "team-green", greenTeam)
-        const greenPlayer2 = playerInfo(type, 2, "team-green", greenTeam)
+        // For doubles: two players per team
+        const greenPlayer1 = playerInfo(type, 1, "green")
+        const greenPlayer2 = playerInfo(type, 2, "green")
 
         greenPlayer1.classList.add("option")
         greenPlayer2.classList.add("option")
@@ -83,8 +104,8 @@ function playerInfoForTeams(type) {
         greenPlayerForm.appendChild(greenPlayer1)
         greenPlayerForm.appendChild(greenPlayer2)
         
-        const orangePlayer1 = playerInfo(type, 1, "team-orange", orangeTeam)
-        const orangePlayer2 = playerInfo(type, 2, "team-orange", orangeTeam)
+        const orangePlayer1 = playerInfo(type, 1, "orange")
+        const orangePlayer2 = playerInfo(type, 2, "orange")
 
         orangePlayer1.classList.add("option")
         orangePlayer2.classList.add("option")
@@ -92,18 +113,22 @@ function playerInfoForTeams(type) {
         orangePlayerForm.appendChild(orangePlayer1)
         orangePlayerForm.appendChild(orangePlayer2)   
     }
-
 }
 
-function playerInfo(type, num, teamId, team) {
+// Creates a single player selection option with label and dropdown
+function playerInfo(type, num, teamId) {
+    // Create container for player option
     const playerInfoOption = document.createElement("div")
     playerInfoOption.classList.add("option")
 
+    // Create header label for player
     const playerInfoHeader = document.createElement("div")
     playerInfoHeader.classList.add("header")
 
-    const dropDown = createPlayerDropDown(teamId, team, num)
+    // Create player dropdown
+    const dropDown = createPlayerDropDown(teamId, num)
 
+    // Add player number label for doubles matches only
     if (type === "doubles") {
         playerInfoHeader.textContent = `Player ${num}`
         playerInfoOption.appendChild(playerInfoHeader)
@@ -113,28 +138,34 @@ function playerInfo(type, num, teamId, team) {
     return playerInfoOption
 }
 
+// Collects selected player names and validates before proceeding to scorer
 function recordPlayerNames() {
+    // Fetch player selection dropdowns
     let greenPlayer = document.getElementById("team-green-player-dropdown-1")
     let orangePlayer = document.getElementById("team-orange-player-dropdown-2")
 
+    // Validate that players have been selected
     if (!greenPlayer.value || !orangePlayer.value) {
         alert("Please select player names for all players.")
         return
     }
 
+    // Extract selected player names
     greenPlayer = greenPlayer.value.trim()
     orangePlayer = orangePlayer.value.trim()
 
+    // Create player names object
     const playerNames = {
-        greenTeam: greenPlayer,
-        orangeTeam: orangePlayer
+        green: greenPlayer,
+        orange: orangePlayer
     }
 
-    // Save in browser storage
+    // Save player names to browser session storage
     sessionStorage.setItem(
         "playerNames",
         JSON.stringify(playerNames)
     )
 
+    // Navigate to scorer page
     window.location.href = "scorer.html"
 }

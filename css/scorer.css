@@ -79,11 +79,10 @@
 }
 #green-one-point {
     color: var(--green);
-    border: 1px solid var(--green);
+    /* border: 1px solid var(--green); */
 }
 #green-one-point:hover {
     background-color: var(--green-card-hover);
-    /* transform: translateY(-2px); */
 }
 #green-one-point:active {
     background-color: var(--green-bg);
@@ -91,7 +90,7 @@
 
 #orange-one-point {
     color: var(--orange);
-    border: 1px solid var(--orange);
+    /* border: 1px solid var(--orange); */
 }
 #orange-one-point:hover {
     background-color: var(--orange-card-hover);
@@ -320,7 +319,7 @@
     width: 10rem;
 }
 
-.interval-options {
+.timer-options {
     display: flex;
     flex-direction: row;
     gap: 1.5rem;
