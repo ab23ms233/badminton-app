@@ -1,7 +1,5 @@
 import {
-    MATCH_STATUS,
     matchConfig,
-    matchState,
     playerNames,
     teams
 } from "./state.js";
@@ -18,15 +16,6 @@ const winnerNameElement = document.querySelector(".set-winner-name")
 const setOverlay = document.querySelector(".set-result-overlay")
 // Interval overlay
 const intervalOverlay = document.querySelector(".interval-overlay")
-
-// Prepare the scoring interface for a new set
-function prepareScoringInterface() {
-    // Initialise points to 0
-    const points = document.querySelectorAll(".point")
-    points.forEach(point => {
-        point.textContent = 0
-    })
-}
 
 function updatePlayerNames(greenPlayer, orangePlayer) {
     // Write player names in scoring interface and set - scores interface
@@ -98,7 +87,33 @@ export function prepareNextSetUI() {
 
     // Enable button view
     enableMatchBtns()
-    prepareScoringInterface()
+    changePlayerSides()
+}
+
+export function changePlayerSides() {
+    const pointsInterface = document.querySelector(".points-interface")
+    const playerSides = document.querySelectorAll(".player-side")
+
+    const playerOnRight = document.querySelector(".player-on-right")
+    const playerOnLeft = document.querySelector(".player-on-left")
+
+    playerOnRight.classList.remove("player-on-right")
+    playerOnRight.classList.add("player-on-left")
+
+    playerOnLeft.classList.remove("player-on-left")
+    playerOnLeft.classList.add("player-on-right")
+
+    if (pointsInterface.classList.contains("change-sides")) {
+        pointsInterface.classList.remove("change-sides")
+        playerSides.forEach(side => {
+            side.classList.remove("change-sides")
+        })
+    } else {
+        pointsInterface.classList.add("change-sides")
+        playerSides.forEach(side => {
+            side.classList.add("change-sides")
+        })
+    }
 }
 
 export function updateScoreDisplay(
@@ -106,28 +121,26 @@ export function updateScoreDisplay(
     greenScore,
     orangeScore) {
     for (let team of teams) {
-        const matchScoreElement = document.getElementById(`${team}-point`)
         const setScoreElement = document.getElementById(`set-${currentSet}-${team}-score`)
         const score =
             team === "green"
                 ? greenScore
                 : orangeScore
 
-        matchScoreElement.textContent = score
         setScoreElement.textContent = score
     }
 }
 
 export function updateServeDisplay(server) {
-    const greenScoreElement =
-        document.getElementById("green-point")
-    const orangeScoreElement =
-        document.getElementById("orange-point")
+    const greenInfoElement =
+        document.getElementById("green-player-info")
+    const orangeInfoElement =
+        document.getElementById("orange-player-info")
 
     const greenServe =
-        greenScoreElement.parentElement.querySelector(".serve")
+        greenInfoElement.querySelector(".serve")
     const orangeServe =
-        orangeScoreElement.parentElement.querySelector(".serve")
+        orangeInfoElement.querySelector(".serve")
 
     if (server === "green") {
         greenServe.classList.add("current-server")
@@ -268,8 +281,6 @@ export function showScorecard() {
 
 
 
-// Prepare scoring interface
-prepareScoringInterface()
 
 // Set-scores for green and orange
 createSetScoresInterface("green")

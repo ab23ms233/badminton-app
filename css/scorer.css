@@ -9,6 +9,8 @@
 
     --modal-bg-color: rgb(13, 16, 16);
     --modal-border-color: #ffffff;
+
+    --court-border-color: white;
 }
 
 #scorer-section {
@@ -37,7 +39,7 @@
 .points-interface::after {
     content: "";
     width: 1px;
-    background-color: #ffffff;
+    background-color: var(--court-border-color);
     position: absolute;
     left: 50%;
     top: 0;
@@ -49,25 +51,48 @@
     flex-direction: row;
     justify-content: space-evenly;
     width: 100%;
+    height: 20rem;
+}
+
+.player-court {
+    position: relative;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+
+    height: 100%;
+    width: 80%;
+}
+
+.service-court {
+    position: relative;
+    border: 1px solid var(--court-border-color);
 }
 
 .player-info {
+    position: absolute;
     display: flex;
     flex-direction: column;
     padding: 3rem;
-    gap: 1.5rem;
+    gap: 1rem;
     align-items: center;
 }
-
+.player-on-right {
+    top: 6%;
+    left: 15%;
+}
+.player-on-left {
+    top: 53%;
+    right: 15%;
+}
 .player-name-in-match {
     font-family: var(--primary-font);
     font-size: 1rem;
 }
 
-.point {
+/* .point {
     font-family: var(--secondary-font);
     font-size: 4rem;
-}
+} */
 
 .one-point {
     margin: 2rem 0rem;
@@ -75,11 +100,9 @@
     padding: 0.8rem;
     font-family: var(--secondary-font);
     font-size: 1rem;
-    /* transition: all 0.3s ease; */
 }
 #green-one-point {
     color: var(--green);
-    /* border: 1px solid var(--green); */
 }
 #green-one-point:hover {
     background-color: var(--green-card-hover);
@@ -90,7 +113,6 @@
 
 #orange-one-point {
     color: var(--orange);
-    /* border: 1px solid var(--orange); */
 }
 #orange-one-point:hover {
     background-color: var(--orange-card-hover);
@@ -192,7 +214,6 @@
 .set-score {
     font-family: var(--secondary-font);
     font-size: 1rem;
-    /* background-color: white; */
     padding: 0.25rem 0.5rem;
 }
 
@@ -208,13 +229,6 @@
 }
 .orange-set-winner {
     background-color: var(--orange-bg);
-}
-
-.point-and-serve {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
 }
 
 .is-paused {

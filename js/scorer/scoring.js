@@ -3,7 +3,6 @@ import {
     matchConfig,
     MATCH_STATUS,
     EVENT_TYPES,
-    playerNames,
     redoStack,
     events,
     setResults,
@@ -17,7 +16,8 @@ import {
     showIntervalOverlay,
     hideIntervalOverlay,
     prepareNextSetUI,
-    gameEndMessage
+    gameEndMessage,
+    changePlayerSides
 } from "./ui.js"
 
 import { 
@@ -93,6 +93,10 @@ export function recordPoint(side) {
     ) {
         matchState.status = MATCH_STATUS.INTERVAL
         showIntervalOverlay()
+
+        if (matchState.currentSet === matchConfig.numOfSets) {
+            changePlayerSides()
+        }
     }
 
     const winner = checkSetWinner(greenScore, orangeScore)
@@ -126,7 +130,7 @@ export function undo() {
     }
 
     const [greenScore, orangeScore] = calculateScore()
-    console.log(greenScore, orangeScore)
+    // console.log(greenScore, orangeScore)
     updateScoreDisplay(matchState.currentSet, greenScore, orangeScore)
     updateServeDisplay(matchState.serve)
 }

@@ -14,7 +14,8 @@ import {
 
 import { 
     togglePauseIcon,
-    showScorecard
+    showScorecard,
+    changePlayerSides
 } from "./ui.js"
 
 import { 
@@ -55,7 +56,7 @@ pauseBtn.addEventListener("click", () => {
 
 // Change-sides btn
 const changeSidesBtn = document.getElementById("change-sides")
-changeSidesBtn.addEventListener("click", changeSides)
+changeSidesBtn.addEventListener("click", changeSidesInPregame)
 
 // Change-serve btn
 const changeServeBtn = document.getElementById("change-serve")
@@ -108,29 +109,14 @@ const viewScorecardBtn = document.getElementById("view-scorecard-btn")
 viewScorecardBtn.addEventListener("click", showScorecard)
 
 
-
 // Change sides before game starts
-function changeSides() {
+function changeSidesInPregame() {
     if (matchState.status !== MATCH_STATUS.PRE_GAME) {
         return
     }
 
-    const pointsInterface = document.querySelector(".points-interface")
-    const playerSides = document.querySelectorAll(".player-side")
-
-    if (matchState.sidesSwapped === false) {
-        pointsInterface.classList.add("change-sides")
-        playerSides.forEach(side => {
-            side.classList.add("change-sides")
-        })
-        matchState.sidesSwapped = true
-    } else {
-        pointsInterface.classList.remove("change-sides")
-        playerSides.forEach(side => {
-            side.classList.remove("change-sides")
-        })
-        matchState.sidesSwapped = false
-    }
+    matchState.sidesSwapped = !matchState.sidesSwapped
+    changePlayerSides()
 }
 
 // Change serve before game starts

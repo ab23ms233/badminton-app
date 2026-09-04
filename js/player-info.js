@@ -4,6 +4,7 @@ const teams = {
     "23MS": ["Arya", "Giri"],
     "24MS": ["Sanjib", "Suchir"]
 }
+const teamIds = ["green", "orange"]
 
 // Fetch match configurations from session storage
 const matchConfig = JSON.parse(sessionStorage.getItem("matchConfig"))
@@ -34,7 +35,7 @@ function createPlayerDropDown(teamId, num) {
     } else {
         teamName = orangeTeam
     }
-    
+
     // Create wrapper container for the dropdown
     const wrapper = document.createElement("div")
     wrapper.classList.add("select-wrapper")
@@ -89,7 +90,7 @@ function playerInfoForTeams(type) {
         greenPlayerForm.appendChild(greenPlayer)
         greenPlayerForm.classList.add("option")
 
-        const orangePlayer = playerInfo(type, 2, "orange")
+        const orangePlayer = playerInfo(type, 1, "orange")
         orangePlayerForm.appendChild(orangePlayer)
         orangePlayerForm.classList.add("option")
     }
@@ -103,7 +104,7 @@ function playerInfoForTeams(type) {
 
         greenPlayerForm.appendChild(greenPlayer1)
         greenPlayerForm.appendChild(greenPlayer2)
-        
+
         const orangePlayer1 = playerInfo(type, 1, "orange")
         const orangePlayer2 = playerInfo(type, 2, "orange")
 
@@ -111,7 +112,7 @@ function playerInfoForTeams(type) {
         orangePlayer2.classList.add("option")
 
         orangePlayerForm.appendChild(orangePlayer1)
-        orangePlayerForm.appendChild(orangePlayer2)   
+        orangePlayerForm.appendChild(orangePlayer2)
     }
 }
 
@@ -140,24 +141,46 @@ function playerInfo(type, num, teamId) {
 
 // Collects selected player names and validates before proceeding to scorer
 function recordPlayerNames() {
-    // Fetch player selection dropdowns
-    let greenPlayer = document.getElementById("team-green-player-dropdown-1")
-    let orangePlayer = document.getElementById("team-orange-player-dropdown-2")
+    let players = []
 
-    // Validate that players have been selected
-    if (!greenPlayer.value || !orangePlayer.value) {
-        alert("Please select player names for all players.")
-        return
+    if (type === "singles") {
+        for (let teamId of teamIds) {
+            const player = document.getElementById(`team-${teamId}-player-dropdown-1`)
+
+            if (!player.value) {
+                alert("Please select player names for all players.")
+                return
+            }
+
+            players.push(player.value.trim())
+        }
+    } else if (type === "doubles") {
+        for (let teamId of teamIds) {
+            for (let i = 0; i < 2; i++) {
+                const player = document.getElementById(`team-${teamId}-player-dropdown-${i + 1}`)
+
+                if (!player.value) {
+                    alert("Please select player names for all players.")
+                    return
+                }
+
+                players.push(player.value.trim())
+            }
+        }
     }
 
-    // Extract selected player names
-    greenPlayer = greenPlayer.value.trim()
-    orangePlayer = orangePlayer.value.trim()
-
     // Create player names object
-    const playerNames = {
-        green: greenPlayer,
-        orange: orangePlayer
+    let playerNames
+    if (type === "singles") {
+        playerNames = {
+            green: players[0],
+            orange: players[1]
+        }
+    } else if (type === "doubles") {
+        playerNames = {
+            green: [players[0], players[1]],
+            orange: [players[2], players[3]]
+        }
     }
 
     // Save player names to browser session storage

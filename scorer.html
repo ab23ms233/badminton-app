@@ -29,7 +29,7 @@
                 <hr class="set-score-line">
 
                 <div class="player-scores green-player-scores">
-                    <div class="player-name-in-set-score orange-player" id="green-player-name-in-set-score">
+                    <div class="player-name-in-set-score orange-player" id="orange-player-name-in-set-score">
                         Player B
                     </div>
                     <div class="set-scores" id="orange-set-scores"></div>
@@ -79,7 +79,7 @@
                         <img src="icons/pause.svg" alt="Pause" id="pause-set-time-icon">
                     </button>
                 </div>
-                
+
                 <button class="primary-action-btn" id="next-set-btn">
                     Next Set
                 </button>
@@ -119,11 +119,15 @@
                     <button class="one-point green-bg thin-green-border" id="green-one-point">
                         +1
                     </button>
-                    <div class="player-info">
-                        <div class="player-name-in-match green-player" id="green-player-name-in-match">Player A
-                        </div>
-                        <div class="point-and-serve">
-                            <div class="point" id="green-point">16</div>
+
+                    <div class="player-court" id="green-court">
+                        <div class="service-court left-court"></div>
+                        <div class="service-court right-court"></div>
+
+                        <div class="player-info player-on-left" id="green-player-info">
+                            <div class="green-player player-name-in-match" id="green-player-name-in-match">
+                                Player A
+                            </div>
                             <div class="serve current-server"></div>
                         </div>
                     </div>
@@ -139,11 +143,14 @@
                 </div>
 
                 <div class="player-side" id="orange-side">
-                    <div class="player-info">
-                        <div class="player-name-in-match orange-player" id="orange-player-name-in-match">Player B
-                        </div>
-                        <div class="point-and-serve">
-                            <div class="point" id="orange-point">18</div>
+                    <div class="player-court" id="orange-court">
+                        <div class="service-court left-court"></div>
+                        <div class="service-court right-court"></div>
+
+                        <div class="player-info player-on-right" id="orange-player-info">
+                            <div class="orange-player player-name-in-match" id="orange-player-name-in-match">
+                                Player B
+                            </div>
                             <div class="serve"></div>
                         </div>
                     </div>
