@@ -37,6 +37,9 @@ const matchState = {
     initialServer: "green",
     serve: "green",
 
+    greenCourt: "right",
+    orangeCourt: "right",
+
     sidesSwapped: false,
 
     intervalOver: false,

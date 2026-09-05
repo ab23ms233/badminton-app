@@ -17,13 +17,14 @@ import {
     hideIntervalOverlay,
     prepareNextSetUI,
     gameEndMessage,
-    changePlayerSides
+    changePlayerSides,
+    changePlayerCourtPositions
 } from "./ui.js"
 
-import { 
-    intervalTimer, 
-    matchTimer, 
-    setBreakTimer 
+import {
+    intervalTimer,
+    matchTimer,
+    setBreakTimer
 } from "./timer.js"
 
 // Game configurations
@@ -78,14 +79,16 @@ export function recordPoint(side) {
     // Winner of rally serves
     matchState.serve = side
 
-    // Update score UI
     const [greenScore, orangeScore] = calculateScore()
-
+    // Update score UI
     updateScoreDisplay(
         matchState.currentSet,
         greenScore,
         orangeScore)
+    // Update server display
     updateServeDisplay(matchState.serve)
+    
+    updatePlayerCourtPositions(side, greenScore, orangeScore)
 
     if ((greenScore === pointsForInterval ||
         orangeScore === pointsForInterval) &&
@@ -111,6 +114,25 @@ export function recordPoint(side) {
     }
 }
 
+function updatePlayerCourtPositions(side, greenScore, orangeScore) {
+    if (side === "green") {
+        matchState.greenCourt =
+            greenScore % 2 === 0
+                ? "right"
+                : "left"
+
+        matchState.orangeCourt = matchState.greenCourt
+    } else {
+        matchState.orangeCourt =
+            orangeScore % 2 === 0
+                ? "right"
+                : "left"
+
+        matchState.greenCourt = matchState.orangeCourt
+    }
+
+    changePlayerCourtPositions(matchState.greenCourt, matchState.orangeCourt)
+}
 // Undo last point
 export function undo() {
     if (

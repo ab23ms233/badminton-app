@@ -124,16 +124,24 @@
                         <div class="service-court left-court"></div>
                         <div class="service-court right-court"></div>
 
-                        <div class="player-info player-on-left" id="green-player-info">
-                            <div class="green-player player-name-in-match" id="green-player-name-in-match">
+                        <div class="player-info player-on-left-side player-on-right-court" id="green-player1-info">
+                            <div class="green-player player-name-in-match" id="green-player1-name-in-match">
                                 Player A
                             </div>
                             <div class="serve current-server"></div>
                         </div>
+
+                        <div class="player-info player-on-left-side player-on-left-court is-div-hidden" id="green-player2-info">
+                            <div class="green-player player-name-in-match" id="green-player2-name-in-match">
+                                Player B
+                            </div>
+                            <div class="serve"></div>
+                        </div>
+
                     </div>
                 </div>
 
-                <div class="pre-game-controls">
+                <div class="pre-game-controls" id="singles-pre-game-controls">
                     <button class="pre-game-control" id="change-sides">
                         <img src="icons/change-sides.svg" alt="Change sides">
                     </button>
@@ -142,17 +150,34 @@
                     </button>
                 </div>
 
+                <div class="pre-game-controls is-div-hidden" id="doubles-pre-game-controls">
+                    <button class="pre-game-control" id="change-courts-green">
+                        <img src="icons/change-sides.svg" alt="Change court" class="change-courts-icon">
+                    </button>
+                    <button class="pre-game-control" id="change-courts-orange">
+                        <img src="icons/change-sides.svg" alt="Change court" class="change-courts-icon">
+                    </button>
+                </div>
+
                 <div class="player-side" id="orange-side">
                     <div class="player-court" id="orange-court">
                         <div class="service-court left-court"></div>
                         <div class="service-court right-court"></div>
 
-                        <div class="player-info player-on-right" id="orange-player-info">
-                            <div class="orange-player player-name-in-match" id="orange-player-name-in-match">
-                                Player B
+                        <div class="player-info player-on-right-side player-on-right-court" id="orange-player1-info">
+                            <div class="orange-player player-name-in-match" id="orange-player1-name-in-match">
+                                Player C
                             </div>
                             <div class="serve"></div>
                         </div>
+
+                        <div class="player-info player-on-right-side player-on-left-court is-div-hidden" id="orange-player2-info">
+                            <div class="orange-player player-name-in-match" id="orange-player2-name-in-match">
+                                Player D
+                            </div>
+                            <div class="serve"></div>
+                        </div>
+
                     </div>
                     <button class="one-point orange-bg thin-orange-border" id="orange-one-point">
                         +1

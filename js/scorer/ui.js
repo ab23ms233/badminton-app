@@ -17,18 +17,46 @@ const setOverlay = document.querySelector(".set-result-overlay")
 // Interval overlay
 const intervalOverlay = document.querySelector(".interval-overlay")
 
-function updatePlayerNames(greenPlayer, orangePlayer) {
-    // Write player names in scoring interface and set - scores interface
-    const greenPlayerNames = document.querySelectorAll(".green-player")
-    greenPlayerNames.forEach(playerName => {
-        playerName.textContent = greenPlayer
-    })
+function configurePlayerDisplay(type) {
+    const isDoubles = type === "doubles"
 
-    const orangePlayerNames = document.querySelectorAll(".orange-player")
-    orangePlayerNames.forEach(playerName => {
-        playerName.textContent = orangePlayer
-    })
+    document
+        .querySelectorAll("#green-player2-info, #orange-player2-info")
+        .forEach(player => {
+            player.classList.toggle("is-div-hidden", !isDoubles)
+        })
+}
 
+function updatePlayerNames(type, greenPlayer, orangePlayer) {
+    if (type === "singles") {
+        // Write singles player names in the scoring and set-scores interfaces
+        document.querySelectorAll(".green-player").forEach(playerName => {
+            playerName.textContent = greenPlayer
+        })
+
+        document.querySelectorAll(".orange-player").forEach(playerName => {
+            playerName.textContent = orangePlayer
+        })
+    } else if (type === "doubles") {
+        // Write both player names in each team's set-score label
+        document.querySelector(".player-name-in-set-score.green-player").textContent =
+            greenPlayer.join(" / ")
+        document.querySelector(".player-name-in-set-score.orange-player").textContent =
+            orangePlayer.join(" / ")
+
+        // Write individual player names in the scoring interface
+        document.querySelectorAll(".player-name-in-match.green-player").forEach(
+            (playerName, index) => {
+                playerName.textContent = greenPlayer[index]
+            }
+        )
+
+        document.querySelectorAll(".player-name-in-match.orange-player").forEach(
+            (playerName, index) => {
+                playerName.textContent = orangePlayer[index]
+            }
+        )
+    }
 }
 
 function updateHeader(type, category) {
@@ -94,26 +122,60 @@ export function changePlayerSides() {
     const pointsInterface = document.querySelector(".points-interface")
     const playerSides = document.querySelectorAll(".player-side")
 
-    const playerOnRight = document.querySelector(".player-on-right")
-    const playerOnLeft = document.querySelector(".player-on-left")
+    const greenPlayers = document.querySelectorAll(
+        "#green-side .player-info"
+    )
+    const orangePlayers = document.querySelectorAll(
+        "#orange-side .player-info"
+    )
 
-    playerOnRight.classList.remove("player-on-right")
-    playerOnRight.classList.add("player-on-left")
+    const greenIsRight = document
+        .querySelector("#green-player1-info")
+        .classList.contains("player-on-right-side")
 
-    playerOnLeft.classList.remove("player-on-left")
-    playerOnLeft.classList.add("player-on-right")
+    const greenClass = greenIsRight
+        ? "player-on-left-side"
+        : "player-on-right-side"
 
-    if (pointsInterface.classList.contains("change-sides")) {
-        pointsInterface.classList.remove("change-sides")
-        playerSides.forEach(side => {
-            side.classList.remove("change-sides")
-        })
-    } else {
-        pointsInterface.classList.add("change-sides")
-        playerSides.forEach(side => {
-            side.classList.add("change-sides")
-        })
-    }
+    const orangeClass = greenIsRight
+        ? "player-on-right-side"
+        : "player-on-left-side"
+
+    greenPlayers.forEach(player => {
+        player.classList.remove(
+            "player-on-left-side",
+            "player-on-right-side"
+        )
+        player.classList.add(greenClass)
+    })
+
+    orangePlayers.forEach(player => {
+        player.classList.remove(
+            "player-on-left-side",
+            "player-on-right-side"
+        )
+        player.classList.add(orangeClass)
+    })
+
+    pointsInterface.classList.toggle("change-sides")
+
+    playerSides.forEach(side => {
+        side.classList.toggle("change-sides")
+    })
+}
+
+export function changePlayerCourtPositions(greenCourt, orangeCourt) {
+    const playersInfo = document.querySelectorAll(".player-info")
+
+    playersInfo.forEach(playerInfo => {
+        playerInfo.classList.remove("player-on-right-court", "player-on-left-court")
+
+        if (greenCourt === "right") {
+            playerInfo.classList.add("player-on-right-court")
+        } else if (greenCourt === "left") {
+            playerInfo.classList.add("player-on-left-court")
+        }
+    })
 }
 
 export function updateScoreDisplay(
@@ -133,9 +195,9 @@ export function updateScoreDisplay(
 
 export function updateServeDisplay(server) {
     const greenInfoElement =
-        document.getElementById("green-player-info")
+        document.getElementById("green-player1-info")
     const orangeInfoElement =
-        document.getElementById("orange-player-info")
+        document.getElementById("orange-player1-info")
 
     const greenServe =
         greenInfoElement.querySelector(".serve")
@@ -278,6 +340,9 @@ export function gameEndMessage(
 export function showScorecard() {
     window.location.href = "scorecard.html"
 }
+export function newMatch() {
+    window.href.location = "match-options.html"
+}
 
 
 
@@ -287,4 +352,5 @@ createSetScoresInterface("green")
 createSetScoresInterface("orange")
 
 updateHeader(matchConfig.type, matchConfig.category)
-updatePlayerNames(playerNames.green, playerNames.orange)
+updatePlayerNames(matchConfig.type.toLowerCase(), playerNames.green, playerNames.orange)
+configurePlayerDisplay(matchConfig.type)

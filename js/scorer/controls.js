@@ -15,7 +15,8 @@ import {
 import { 
     togglePauseIcon,
     showScorecard,
-    changePlayerSides
+    changePlayerSides,
+    newMatch
 } from "./ui.js"
 
 import { 
@@ -108,7 +109,8 @@ resetSetTimerBtn.addEventListener("click", () => {setBreakTimer.reset()})
 const viewScorecardBtn = document.getElementById("view-scorecard-btn")
 viewScorecardBtn.addEventListener("click", showScorecard)
 
-
+const newMatchBtn = document.getElementById("new-match-btn")
+newMatchBtn.addEventListener("click", newMatch)
 // Change sides before game starts
 function changeSidesInPregame() {
     if (matchState.status !== MATCH_STATUS.PRE_GAME) {
