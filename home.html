@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#080808">
+    <title>Badminton Scorer</title>
+
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/home.css">
+</head>
+
+<body>
+    <main class="home-page">
+        <header class="home-header">
+            <h1 class="app-title">Badminton Scorer</h1>
+
+            <button class="sync-btn" type="button" aria-label="Sync data">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20 11a8.1 8.1 0 0 0-14.9-4L3 10"></path>
+                    <path d="M3 5v5h5"></path>
+                    <path d="M4 13a8.1 8.1 0 0 0 14.9 4L21 14"></path>
+                    <path d="M21 19v-5h-5"></path>
+                </svg>
+            </button>
+        </header>
+
+        <section class="new-match-section">
+            <button class="primary-action-btn new-match-btn" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14"></path>
+                    <path d="M5 12h14"></path>
+                </svg>
+                <span>New Match</span>
+            </button>
+        </section>
+
+        <section class="recent-matches">
+            <div class="section-title-row">
+                <h2 class="header recent-matches-title">Recent Matches</h2>
+                <button class="see-all-btn" type="button">See All</button>
+            </div>
+
+            <div class="matches-list">
+                <article class="match-card">
+                    <div class="players">
+                        <div class="player-row winner">
+                            <span class="player-name">Arya Kumar</span>
+                            <span class="sets-won">2</span>
+                        </div>
+
+                        <div class="player-row">
+                            <span class="player-name">Rahul Das</span>
+                            <span class="sets-won">1</span>
+                        </div>
+                    </div>
+
+                    <div class="match-card-footer">
+                        <span class="match-meta">IISM 2026 · 06 Sep 2026</span>
+                        <button class="details-btn" type="button">
+                            <span>View Details</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="m9 18 6-6-6-6"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </article>
+
+                <article class="match-card">
+                    <div class="players">
+                        <div class="player-row winner">
+                            <span class="player-name">Sneha Patel</span>
+                            <span class="sets-won">2</span>
+                        </div>
+
+                        <div class="player-row">
+                            <span class="player-name">Priya Sharma</span>
+                            <span class="sets-won">0</span>
+                        </div>
+                    </div>
+
+                    <div class="match-card-footer">
+                        <span class="match-meta">Club Championship · 05 Sep 2026</span>
+                        <button class="details-btn" type="button">
+                            <span>View Details</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="m9 18 6-6-6-6"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+        <a class="nav-item active" href="#" aria-current="page">
+            <img src="icons/home-icon.svg" alt="Home">
+            <span>Home</span>
+        </a>
+
+        <a class="nav-item" href="#">
+            <img src="icons/matches-icon.svg" alt="Matches">
+            <span>Matches</span>
+        </a>
+
+        <a class="nav-item" href="#">
+            <img src="icons/players-icon.svg" alt="Players">
+            <span>Players</span>
+        </a>
+
+        <a class="nav-item" href="#">
+            <img src="icons/more-icon.svg" alt="More">
+            <span>More</span>
+        </a>
+    </nav>
+</body>
+</html>

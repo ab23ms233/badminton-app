@@ -275,6 +275,12 @@
     z-index: 11;
 }
 
+/* The ID rule above is more specific than .change-sides, so explicitly
+   reverse this row when teams exchange physical sides. */
+#doubles-pre-game-controls.change-sides {
+    flex-direction: row-reverse;
+}
+
 .change-courts-icon {
     transform: rotate(90deg);
 }
@@ -339,6 +345,7 @@
 .match-result-overlay {
     padding: 4rem;
 }
+
 
 .match-result-interface {
     gap: 2rem;

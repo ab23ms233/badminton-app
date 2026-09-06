@@ -1,7 +1,8 @@
 import {
     matchConfig,
     playerNames,
-    teams
+    teams,
+    doublesState
 } from "./state.js";
 
 const matchButtons = document.querySelectorAll(
@@ -18,13 +19,18 @@ const setOverlay = document.querySelector(".set-result-overlay")
 const intervalOverlay = document.querySelector(".interval-overlay")
 
 function configurePlayerDisplay(type) {
-    const isDoubles = type === "doubles"
+    const isDoubles = type.toLowerCase() === "doubles"
 
     document
         .querySelectorAll("#green-player2-info, #orange-player2-info")
         .forEach(player => {
             player.classList.toggle("is-div-hidden", !isDoubles)
         })
+
+    document.getElementById("singles-pre-game-controls")
+        .classList.toggle("is-div-hidden", false)
+    document.getElementById("doubles-pre-game-controls")
+        .classList.toggle("is-div-hidden", !isDoubles)
 }
 
 function updatePlayerNames(type, greenPlayer, orangePlayer) {
@@ -118,9 +124,20 @@ export function prepareNextSetUI() {
     changePlayerSides()
 }
 
+export function showPreGameControls(isDoubles) {
+    document.getElementById("singles-pre-game-controls").style.display = "flex"
+
+    if (isDoubles) {
+        document.getElementById("doubles-pre-game-controls").style.display = "flex"
+    }
+}
+
 export function changePlayerSides() {
     const pointsInterface = document.querySelector(".points-interface")
     const playerSides = document.querySelectorAll(".player-side")
+    const doublesCourtControls = document.getElementById(
+        "doubles-pre-game-controls"
+    )
 
     const greenPlayers = document.querySelectorAll(
         "#green-side .player-info"
@@ -162,18 +179,23 @@ export function changePlayerSides() {
     playerSides.forEach(side => {
         side.classList.toggle("change-sides")
     })
+
+    // Keep each horizontal court-switch control beside its team after ends swap.
+    doublesCourtControls.classList.toggle("change-sides")
 }
 
-export function changePlayerCourtPositions(greenCourt, orangeCourt) {
-    const playersInfo = document.querySelectorAll(".player-info")
+export function changePlayerCourtPositions(courtPositions) {
+    teams.forEach(team => {
+        const rightPlayer = courtPositions[team].right
 
-    playersInfo.forEach(playerInfo => {
-        playerInfo.classList.remove("player-on-right-court", "player-on-left-court")
-
-        if (greenCourt === "right") {
-            playerInfo.classList.add("player-on-right-court")
-        } else if (greenCourt === "left") {
-            playerInfo.classList.add("player-on-left-court")
+        for (let playerIndex = 0; playerIndex < 2; playerIndex++) {
+            const playerInfo = document.getElementById(`${team}-player${playerIndex + 1}-info`)
+            playerInfo.classList.remove("player-on-right-court", "player-on-left-court")
+            playerInfo.classList.add(
+                playerIndex === rightPlayer
+                    ? "player-on-right-court"
+                    : "player-on-left-court"
+            )
         }
     })
 }
@@ -193,26 +215,15 @@ export function updateScoreDisplay(
     }
 }
 
-export function updateServeDisplay(server) {
-    const greenInfoElement =
-        document.getElementById("green-player1-info")
-    const orangeInfoElement =
-        document.getElementById("orange-player1-info")
+export function updateServeDisplay(server, serverPlayer = 0) {
+    document.querySelectorAll(".serve").forEach(marker => {
+        marker.classList.remove("current-server")
+    })
 
-    const greenServe =
-        greenInfoElement.querySelector(".serve")
-    const orangeServe =
-        orangeInfoElement.querySelector(".serve")
-
-    if (server === "green") {
-        greenServe.classList.add("current-server")
-        orangeServe.classList.remove("current-server")
-    }
-
-    else if (server === "orange") {
-        greenServe.classList.remove("current-server")
-        orangeServe.classList.add("current-server")
-    }
+    const serverInfoElement = document.getElementById(
+        `${server}-player${serverPlayer + 1}-info`
+    )
+    serverInfoElement?.querySelector(".serve")?.classList.add("current-server")
 }
 
 export function updateSetScore(
@@ -252,12 +263,11 @@ export function showSetMessage(
     disableMatchBtns()
 
     // Winner name
-    const winnerName = playerNames[winnerTeamId]
+    const winnerName = playerNames[winnerTeamId].join(" / ")
     const winnerColorClass = `${winnerTeamId}-player`
 
     // Set num
     const numSetMessage = `Set-${currentSet}`
-
 
     // Show winner message
     numSetElement.textContent = numSetMessage

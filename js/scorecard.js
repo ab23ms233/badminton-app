@@ -5,19 +5,14 @@ const matchConfig = JSON.parse(sessionStorage.getItem("matchConfig"))
 const matchStats = JSON.parse(sessionStorage.getItem("matchStats"))
 
 const winnerTeam = matchStats.winner
-const winnerPlayer = playerNames[winnerTeam]
+const winnerPlayer = playerNames[winnerTeam].join(" / ")
 const teams = ["green", "orange"]
-
-console.log(winnerTeam)
-console.log(playerNames)
-console.log(matchConfig)
 
 // Set player names
 function setPlayerNames() {
     for (let team of teams) {
         const playerName = document.getElementById(`${team}-player-name`)
-        playerName.textContent = playerNames[team]
-        console.log(playerNames[team])
+        playerName.textContent = playerNames[team].join(" /\n")
     }
 }
 

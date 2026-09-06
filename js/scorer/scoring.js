@@ -6,6 +6,7 @@ import {
     redoStack,
     events,
     setResults,
+    doublesState,
 } from "./state.js"
 
 import {
@@ -58,8 +59,13 @@ export function calculateScore() {
 // Record a point
 export function recordPoint(side) {
     if (matchState.status === MATCH_STATUS.PRE_GAME) {
+        if (isDoubles() && doublesState.serverPlayer === null) {
+            return
+        }
         matchState.status = MATCH_STATUS.ONGOING
-        document.querySelector(".pre-game-controls").style.display = "none"
+        document.querySelectorAll(".pre-game-controls").forEach(control => {
+            control.style.display = "none"
+        })
     }
     if (matchState.status !== MATCH_STATUS.ONGOING) {
         alert("Match is paused.")
@@ -72,23 +78,28 @@ export function recordPoint(side) {
     const event = {
         type: EVENT_TYPES.POINT,
         player: side,
-        set: matchState.currentSet
+        set: matchState.currentSet,
+        doublesBefore: isDoubles() ? snapshotDoublesState() : null
     }
     events.push(event)
 
-    // Winner of rally serves
-    matchState.serve = side
-
     const [greenScore, orangeScore] = calculateScore()
+    if (isDoubles()) {
+        applyDoublesRally(side, greenScore, orangeScore)
+    } else {
+        // Winner of rally serves.
+        matchState.serve = side
+        updateSinglesCourtPosition(side, greenScore, orangeScore)
+    }
+    event.doublesAfter = isDoubles() ? snapshotDoublesState() : null
+
     // Update score UI
     updateScoreDisplay(
         matchState.currentSet,
         greenScore,
         orangeScore)
     // Update server display
-    updateServeDisplay(matchState.serve)
-    
-    updatePlayerCourtPositions(side, greenScore, orangeScore)
+    updateServeDisplay(matchState.serve, doublesState.serverPlayer)
 
     if ((greenScore === pointsForInterval ||
         orangeScore === pointsForInterval) &&
@@ -114,7 +125,7 @@ export function recordPoint(side) {
     }
 }
 
-function updatePlayerCourtPositions(side, greenScore, orangeScore) {
+function updateSinglesCourtPosition(side, greenScore, orangeScore) {
     if (side === "green") {
         matchState.greenCourt =
             greenScore % 2 === 0
@@ -131,7 +142,10 @@ function updatePlayerCourtPositions(side, greenScore, orangeScore) {
         matchState.greenCourt = matchState.orangeCourt
     }
 
-    changePlayerCourtPositions(matchState.greenCourt, matchState.orangeCourt)
+    changePlayerCourtPositions({
+        green: { right: matchState.greenCourt === "right" ? 0 : 1 },
+        orange: { right: matchState.orangeCourt === "right" ? 0 : 1 }
+    })
 }
 // Undo last point
 export function undo() {
@@ -145,7 +159,9 @@ export function undo() {
     const lastEvent = events.pop()
     redoStack.push(lastEvent)
 
-    if (events.length === 0) {
+    if (isDoubles()) {
+        restoreDoublesState(lastEvent.doublesBefore)
+    } else if (events.length === 0) {
         matchState.serve = matchState.initialServer
     } else {
         matchState.serve = events.at(-1).player
@@ -154,7 +170,10 @@ export function undo() {
     const [greenScore, orangeScore] = calculateScore()
     // console.log(greenScore, orangeScore)
     updateScoreDisplay(matchState.currentSet, greenScore, orangeScore)
-    updateServeDisplay(matchState.serve)
+    updateServeDisplay(matchState.serve, doublesState.serverPlayer)
+    if (isDoubles()) {
+        changePlayerCourtPositions(doublesState.courtPositions)
+    }
 }
 // Redo last undone point
 export function redo() {
@@ -168,11 +187,18 @@ export function redo() {
     const lastUndo = redoStack.pop()
     events.push(lastUndo)
 
-    matchState.serve = lastUndo.player
+    if (isDoubles()) {
+        restoreDoublesState(lastUndo.doublesAfter)
+    } else {
+        matchState.serve = lastUndo.player
+    }
 
     const [greenScore, orangeScore] = calculateScore()
     updateScoreDisplay(matchState.currentSet, greenScore, orangeScore)
-    updateServeDisplay(matchState.serve)
+    updateServeDisplay(matchState.serve, doublesState.serverPlayer)
+    if (isDoubles()) {
+        changePlayerCourtPositions(doublesState.courtPositions)
+    }
 }
 
 // End interval
@@ -279,7 +305,6 @@ export function finishSet(greenScore, orangeScore, winner, duration) {
 export function prepareNextSet() {
     // Update matchstate
     matchState.currentSet++
-    matchState.status = MATCH_STATUS.ONGOING
     matchState.serve = setResults.at(-1).winner
     matchState.intervalOver = false
 
@@ -287,6 +312,80 @@ export function prepareNextSet() {
     setBreakTimer.reset()
 
     prepareNextSetUI()
+
+    if (isDoubles()) {
+        matchState.status = MATCH_STATUS.PRE_GAME
+        doublesState.serverPlayer = null
+        document.dispatchEvent(new CustomEvent("doubles-set-setup", {
+            detail: { servingTeam: matchState.serve }
+        }))
+    } else {
+        matchState.status = MATCH_STATUS.ONGOING
+    }
+}
+
+export function initialiseDoublesSet(initialServer = "green", serverPlayer = 0, receiverPlayer = 0) {
+    const receivingTeam = initialServer === "green" ? "orange" : "green"
+
+    matchState.initialServer = initialServer
+    matchState.serve = initialServer
+    doublesState.serverPlayer = Number(serverPlayer)
+    doublesState.courtPositions.green.right = initialServer === "green"
+        ? Number(serverPlayer)
+        : Number(receiverPlayer)
+    doublesState.courtPositions.orange.right = initialServer === "orange"
+        ? Number(serverPlayer)
+        : Number(receiverPlayer)
+    doublesState.initialState = snapshotDoublesState()
+
+    changePlayerCourtPositions(doublesState.courtPositions)
+    updateServeDisplay(initialServer, doublesState.serverPlayer)
+}
+
+function applyDoublesRally(winner, greenScore, orangeScore) {
+    const servingTeam = matchState.serve
+    if (winner !== servingTeam) {
+        // On a service change the receiving pair remains in place. The player
+        // in the court matching the new score becomes the server.
+        const winnerScore = winner === "green" ? greenScore : orangeScore
+        doublesState.serverPlayer = winnerScore % 2 === 0
+            ? doublesState.courtPositions[winner].right
+            : 1 - doublesState.courtPositions[winner].right
+    } else {
+        // The serving pair won: the same player keeps the serve and the pair
+        // exchanges service courts for the new score parity.
+        doublesState.courtPositions[winner].right =
+            1 - doublesState.courtPositions[winner].right
+    }
+
+    matchState.serve = winner
+    changePlayerCourtPositions(doublesState.courtPositions)
+}
+
+function snapshotDoublesState() {
+    return {
+        serve: matchState.serve,
+        serverPlayer: doublesState.serverPlayer,
+        courtPositions: {
+            green: { right: doublesState.courtPositions.green.right },
+            orange: { right: doublesState.courtPositions.orange.right }
+        }
+    }
+}
+
+function restoreDoublesState(snapshot) {
+    if (!snapshot) {
+        return
+    }
+
+    matchState.serve = snapshot.serve
+    doublesState.serverPlayer = snapshot.serverPlayer
+    doublesState.courtPositions.green.right = snapshot.courtPositions.green.right
+    doublesState.courtPositions.orange.right = snapshot.courtPositions.orange.right
+}
+
+function isDoubles() {
+    return matchConfig.type.toLowerCase() === "doubles"
 }
 
 function saveSetResult(

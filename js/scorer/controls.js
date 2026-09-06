@@ -3,7 +3,8 @@ import {
     undo,
     redo,
     endInterval,
-    prepareNextSet
+    prepareNextSet,
+    initialiseDoublesSet
 } from "./scoring.js"
 
 import { 
@@ -16,12 +17,15 @@ import {
     togglePauseIcon,
     showScorecard,
     changePlayerSides,
-    newMatch
+    newMatch,
+    showPreGameControls
 } from "./ui.js"
 
 import { 
     MATCH_STATUS,
-    matchState
+    matchState,
+    matchConfig,
+    doublesState
 } from "./state.js"
 
 // Listen to +1 btn events
@@ -111,6 +115,45 @@ viewScorecardBtn.addEventListener("click", showScorecard)
 
 const newMatchBtn = document.getElementById("new-match-btn")
 newMatchBtn.addEventListener("click", newMatch)
+
+const greenCourtBtn = document.getElementById("change-courts-green")
+const orangeCourtBtn = document.getElementById("change-courts-orange")
+
+if (matchConfig.type.toLowerCase() === "doubles") {
+    initialiseDoublesSet("green", 0, 0)
+    greenCourtBtn.addEventListener("click", () => swapDoublesCourts("green"))
+    orangeCourtBtn.addEventListener("click", () => swapDoublesCourts("orange"))
+
+    document.addEventListener("doubles-set-setup", event => {
+        // The previous set's winner must serve first. The horizontal controls
+        // still let the scorer choose the starting server and receiver.
+        initialiseDoublesSet(
+            event.detail.servingTeam,
+            doublesState.courtPositions[event.detail.servingTeam].right,
+            doublesState.courtPositions[
+                event.detail.servingTeam === "green" ? "orange" : "green"
+            ].right
+        )
+        showPreGameControls(true)
+        changeServeBtn.classList.add("is-btn-hidden")
+    })
+}
+
+function swapDoublesCourts(team) {
+    if (matchState.status !== MATCH_STATUS.PRE_GAME) {
+        return
+    }
+
+    doublesState.courtPositions[team].right =
+        1 - doublesState.courtPositions[team].right
+
+    const receivingTeam = matchState.initialServer === "green" ? "orange" : "green"
+    initialiseDoublesSet(
+        matchState.initialServer,
+        doublesState.courtPositions[matchState.initialServer].right,
+        doublesState.courtPositions[receivingTeam].right
+    )
+}
 // Change sides before game starts
 function changeSidesInPregame() {
     if (matchState.status !== MATCH_STATUS.PRE_GAME) {
@@ -127,14 +170,21 @@ function changeServe() {
         return
     }
 
-    const servers = document.querySelectorAll(".serve")
-    servers.forEach(server => {
-        if (server.classList.contains("current-server")) {
-            server.classList.remove("current-server")
-        } else {
-            server.classList.add("current-server")
+    if (matchConfig.type.toLowerCase() === "doubles") {
+        // Badminton requires the previous set's winning side to serve first.
+        if (matchState.currentSet > 1) {
+            return
         }
-    })
+
+        const nextServer = matchState.initialServer === "green" ? "orange" : "green"
+        const receiver = nextServer === "green" ? "orange" : "green"
+        initialiseDoublesSet(
+            nextServer,
+            doublesState.courtPositions[nextServer].right,
+            doublesState.courtPositions[receiver].right
+        )
+        return
+    }
 
     // Change server
     matchState.initialServer = 

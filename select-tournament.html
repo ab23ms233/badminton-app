@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#080808">
+    <title>Select Tournament</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/select-tournament.css">
+    <script src="js/select-tournament.js" defer></script>
+</head>
+<body>
+    <main class="select-tournament-page">
+        <header class="page-header">
+            <button class="back-btn" type="button" aria-label="Go back">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"></path><path d="m12 19-7-7 7-7"></path></svg>
+            </button>
+            <h1>Select Tournament</h1>
+        </header>
+
+        <section class="tournaments-section">
+            <h2 class="header active-heading">Active</h2>
+            <div class="tournament-list">
+                <button class="tournament-card" type="button" data-tournament-id="iism-2026">
+                    <div class="tournament-card-header"><span class="tournament-name">IISM 2026</span><span class="tournament-icon">♙</span></div>
+                    <div class="tournament-card-footer"><span>Starts 12 Oct 2026</span><strong>18 matches</strong></div>
+                </button>
+                <button class="tournament-card" type="button" data-tournament-id="inter-batch-2026">
+                    <div class="tournament-card-header"><span class="tournament-name">Inter-Batch 2026</span><span class="tournament-icon">♙</span></div>
+                    <div class="tournament-card-footer"><span>Ongoing · 15 Oct 2026</span><strong>24 matches</strong></div>
+                </button>
+                <button class="tournament-card" type="button" data-tournament-id="club-championship">
+                    <div class="tournament-card-header"><span class="tournament-name">Club Championship</span><span class="tournament-icon">♙</span></div>
+                    <div class="tournament-card-footer"><span>Completed · 05 Sep 2026</span><strong>12 matches</strong></div>
+                </button>
+                <button class="tournament-card" type="button" data-tournament-id="weekend-league">
+                    <div class="tournament-card-header"><span class="tournament-name">Weekend League</span><span class="tournament-icon">♙</span></div>
+                    <div class="tournament-card-footer"><span>Draft · 28 Sep 2026</span><strong>8 matches</strong></div>
+                </button>
+            </div>
+        </section>
+
+        <button class="primary-action-btn create-tournament-btn" id="create-tournament-btn" type="button">
+            Create Tournament
+        </button>
+    </main>
+</body>
+</html>

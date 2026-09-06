@@ -24,7 +24,6 @@ const EVENT_TYPES = {
     POINT: "point"
 }
 
-// Current state of match
 // Current match state
 const matchState = {
     status: MATCH_STATUS.PRE_GAME,
@@ -48,6 +47,17 @@ const matchState = {
     setBreakPaused: false
 }
 
+const doublesState = {
+    // The index (0 or 1) of the player standing in the right service court.
+    // The other player is therefore in the left service court.
+    courtPositions: {
+        green: { right: 0 },
+        orange: { right: 0 }
+    },
+    serverPlayer: null,
+    initialState: null
+}
+
 const teams = ["green", "orange"]
 
 export {
@@ -62,5 +72,6 @@ export {
     redoStack,
 
     setResults,
-    matchState
+    matchState,
+    doublesState
 }
