@@ -17,4 +17,6 @@
 
     --green-card-hover: rgba(0, 255, 102, 0.1);
     --orange-card-hover: rgba(255, 87, 34, 0.1);
+
+    --create-error: #f87171;
 }

@@ -1,18 +1,34 @@
-// Database of available players for each team
-const teams = {
-    "22MS": ["Shashank", "Aviyank"],
-    "23MS": ["Arya", "Giri"],
-    "24MS": ["Sanjib", "Suchir"]
-}
 const teamIds = ["green", "orange"]
+const ADD_PLAYER_VALUE = "__add-player__"
 
-// Fetch match configurations from session storage
-const matchConfig = JSON.parse(sessionStorage.getItem("matchConfig"))
-const type = matchConfig.type.toLowerCase()
+// Fetch the selected teams and match configuration from browser storage
+const teamOverviewConfig = JSON.parse(
+    sessionStorage.getItem("teamOverviewConfig") || "null"
+)
+const matchConfig = JSON.parse(
+    sessionStorage.getItem("matchConfig") || "null"
+)
+const selectedTournament = JSON.parse(
+    sessionStorage.getItem("selectedTournament") || "null"
+)
+const tournaments = JSON.parse(
+    localStorage.getItem("tournaments") || "[]"
+)
+const tournament = tournaments.find(item => item.id === selectedTournament?.id)
+const type = matchConfig?.type?.toLowerCase() || "singles"
 
-// Extract team names from match configuration
-const greenTeam = matchConfig.green
-const orangeTeam = matchConfig.orange
+// Extract team names from Team Overview
+const greenTeam = teamOverviewConfig?.green || matchConfig?.green || ""
+const orangeTeam = teamOverviewConfig?.orange || matchConfig?.orange || ""
+
+function getTeamPlayers(teamName) {
+    const team = tournament?.teams?.find(item => item.name === teamName)
+    return team?.players || []
+}
+
+function getTeam(teamName) {
+    return tournament?.teams?.find(item => item.name === teamName)
+}
 
 // Generate player selection interface based on match type
 if (type === "singles") {
@@ -56,17 +72,127 @@ function createPlayerDropDown(teamId, num) {
     select.appendChild(placeholder)
 
     // Populate dropdown with available players from the team
-    const playerList = teams[teamName]
+    const playerList = getTeamPlayers(teamName)
     playerList.forEach(player => {
         const option = document.createElement("option")
-        option.value = player
-        option.textContent = player
+        const playerName = typeof player === "string" ? player : player.name
+        option.value = playerName
+        option.textContent = playerName
 
         select.appendChild(option)
     });
 
+    const addPlayerOption = document.createElement("option")
+    addPlayerOption.value = ADD_PLAYER_VALUE
+    addPlayerOption.textContent = "+ Add a Player"
+    select.appendChild(addPlayerOption)
+
+    select.addEventListener("change", () => {
+        if (select.value === ADD_PLAYER_VALUE) {
+            select.value = ""
+            showAddPlayerForm(teamName, wrapper, select)
+        }
+    })
+
     wrapper.appendChild(select)
     return wrapper
+}
+
+function showAddPlayerForm(teamName, wrapper, select) {
+    wrapper.querySelector(".player-add-form")?.remove()
+
+    const addPlayerForm = document.createElement("div")
+    addPlayerForm.className = "player-add-form"
+
+    const input = document.createElement("input")
+    input.className = "player-add-input"
+    input.type = "text"
+    input.placeholder = "Enter player name"
+    input.autocomplete = "off"
+    input.maxLength = 60
+
+    const errorMessage = document.createElement("small")
+    errorMessage.className = "player-add-error"
+    errorMessage.hidden = true
+
+    const actions = document.createElement("div")
+    actions.className = "player-add-actions"
+
+    const addButton = document.createElement("button")
+    addButton.className = "primary-action-btn player-add-submit"
+    addButton.type = "button"
+    addButton.textContent = "Add Player"
+
+    const cancelButton = document.createElement("button")
+    cancelButton.className = "secondary-action-btn player-add-cancel"
+    cancelButton.type = "button"
+    cancelButton.textContent = "Cancel"
+
+    addButton.addEventListener("click", () => {
+        const playerName = input.value.trim()
+        const normalizedName = playerName.toLowerCase()
+        const team = getTeam(teamName)
+
+        if (!playerName) {
+            errorMessage.textContent = "Please enter a player name."
+            errorMessage.hidden = false
+            input.focus()
+            return
+        }
+
+        if (team?.players.some(player => {
+            const existingName = typeof player === "string" ? player : player.name
+            return existingName.toLowerCase() === normalizedName
+        })) {
+            errorMessage.textContent = "A player with this name already exists."
+            errorMessage.hidden = false
+            input.focus()
+            return
+        }
+
+        if (!team) {
+            errorMessage.textContent = "The selected team could not be found."
+            errorMessage.hidden = false
+            return
+        }
+
+        const newPlayer = {
+            id: crypto.randomUUID(),
+            name: playerName
+        }
+
+        team.players.push(newPlayer)
+        saveTournamentPlayers()
+
+        const addPlayerOption = select.querySelector(`option[value="${ADD_PLAYER_VALUE}"]`)
+        const playerOption = document.createElement("option")
+        playerOption.value = playerName
+        playerOption.textContent = playerName
+        select.insertBefore(playerOption, addPlayerOption)
+        select.value = playerName
+        addPlayerForm.remove()
+    })
+
+    cancelButton.addEventListener("click", () => addPlayerForm.remove())
+    input.addEventListener("input", () => {
+        errorMessage.hidden = true
+    })
+
+    actions.append(addButton, cancelButton)
+    addPlayerForm.append(input, errorMessage, actions)
+    wrapper.appendChild(addPlayerForm)
+    input.focus()
+}
+
+function saveTournamentPlayers() {
+    if (!tournament) {
+        return
+    }
+
+    const tournamentIndex = tournaments.findIndex(item => item.id === tournament.id)
+    tournaments[tournamentIndex].teams = tournament.teams
+    tournaments[tournamentIndex].updatedAt = new Date().toISOString()
+    localStorage.setItem("tournaments", JSON.stringify(tournaments))
 }
 
 

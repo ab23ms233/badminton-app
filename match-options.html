@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    <section class="section" id="match-options-section">
+    <form class="section" id="match-options-section" novalidate>
         <!-- Heading -->
         <header class="section-heading">
             Match Options
@@ -25,11 +25,6 @@
         <section class="options-cont">
             <!-- The container is divided into 2 options-row -->
             <section class="options-row">
-
-                <!-- Team green dropdown using js -->
-                <div class="team-select option" id="team-green-option">
-                    <label class="header green-player" id="team-green-header">Team Green</label>
-                </div>
                 <!-- Category -->
                 <div class="option">
                     <label class="header">Category</label>
@@ -53,10 +48,6 @@
             </section>
 
             <section class="options-row">
-                <!-- Team orange dropdown using js -->
-                <div class="team-select option" id="team-orange-option">
-                    <label class="header orange-player" id="team-orange-header">Team Orange</label>
-                </div>
                 <!-- Type -->
                 <div class="option">
                     <label class="header">Type</label>
@@ -79,13 +70,12 @@
                     </div>
                 </div>
             </section>
-
         </section>
         
         <!-- Next btn -->
-        <button class="primary-action-btn" id="next-btn">Next</button>
+        <button class="primary-action-btn" id="next-btn" type="submit">Next</button>
 
-    </section>
+    </form>
 
 </body>
 

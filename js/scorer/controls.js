@@ -18,7 +18,8 @@ import {
     showScorecard,
     changePlayerSides,
     newMatch,
-    showPreGameControls
+    showPreGameControls,
+    updateServeDisplay
 } from "./ui.js"
 
 import { 
@@ -193,4 +194,5 @@ function changeServe() {
     : "green"
 
     matchState.serve = matchState.initialServer
+    updateServeDisplay(matchState.serve)
 }

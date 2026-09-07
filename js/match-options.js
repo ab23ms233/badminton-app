@@ -1,22 +1,10 @@
-// Event listener for start match button
-const nextBtn = document.getElementById("next-btn");
-nextBtn.addEventListener("click", recordMatchConfig);
+// Event listener for start match form
+const matchOptionsForm = document.getElementById("match-options-section")
+matchOptionsForm.addEventListener("submit", recordMatchConfig)
 
 // Collects all match configuration from the form and validates inputs
-function recordMatchConfig() {
-    // Fetch team selection dropdowns
-    let teamGreen = document.querySelector(".team-green-select")
-    let teamOrange = document.querySelector(".team-orange-select")
-
-    // Validate that both teams have been selected
-    if (!teamGreen.value || !teamOrange.value) {
-        alert("Please select team names of both teams before proceeding.")
-        return
-    }
-
-    // Extract team names
-    teamGreen = teamGreen.value.trim()
-    teamOrange = teamOrange.value.trim()
+function recordMatchConfig(event) {
+    event.preventDefault()
 
     // Extract match type and category
     const category = document.querySelector(".category-card.selected").textContent.trim()
@@ -31,8 +19,6 @@ function recordMatchConfig() {
 
     // Create match configuration object
     const matchConfig = {
-        green: teamGreen,
-        orange: teamOrange,
         category: category,
         type: type,
         numOfSets: numOfSets,
@@ -66,40 +52,6 @@ function setCardSelection(selector) {
     })
 }
 
-// Creates a dropdown menu for team selection with all available teams
-function createTeamDropDown(teamId) {
-    // Create wrapper container for the dropdown
-    const wrapper = document.createElement("div")
-    wrapper.classList.add("select-wrapper")
-
-    // Create select element with appropriate classes
-    const select = document.createElement("select")
-    select.classList.add(`team-${teamId}-select`, `thin-${teamId}-border`, "dropdown", "team-select-dropdown")
-
-    // Create placeholder option
-    const placeholder = document.createElement("option")
-    placeholder.value = ""
-    placeholder.textContent = "Choose a team..."
-    placeholder.disabled = true
-    placeholder.selected = true
-    placeholder.hidden = true
-
-    select.appendChild(placeholder)
-    select.required = true
-
-    // Populate dropdown with all team names
-    teams.forEach(team => {
-        const option = document.createElement("option")
-        option.value = team
-        option.textContent = team
-
-        select.appendChild(option)
-    })
-
-    wrapper.appendChild(select)
-    return wrapper
-}
-
 // Creates a dropdown menu for selecting the number of sets in a match
 function createSetsDropDown(numSets, defaultSet) {
     // Create wrapper container for the dropdown
@@ -117,8 +69,6 @@ function createSetsDropDown(numSets, defaultSet) {
         option.value = set
         option.textContent = set
 
-        console.log(set)
-        console.log(defaultSet)
         // Set the default selected value
         if (set === defaultSet) {
             console.log(set)
@@ -131,21 +81,6 @@ function createSetsDropDown(numSets, defaultSet) {
     wrapper.appendChild(select)
     return wrapper
 }
-
-// Array of available team options
-const teams = [
-    "22MS",
-    "23MS",
-    "24MS"
-]
-
-// Create team selection dropdowns for both teams
-const greenDropDown = createTeamDropDown("green")
-const orangeDropDown = createTeamDropDown("orange")
-
-// Insert team dropdowns into the page
-document.getElementById("team-green-option").appendChild(greenDropDown)
-document.getElementById("team-orange-option").appendChild(orangeDropDown)
 
 // Create and insert number of sets dropdown
 const numSets = [1, 3, 5]

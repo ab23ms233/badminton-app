@@ -320,6 +320,12 @@ export function prepareNextSet() {
             detail: { servingTeam: matchState.serve }
         }))
     } else {
+        matchState.greenCourt = "right"
+        matchState.orangeCourt = "right"
+        changePlayerCourtPositions({
+            green: { right: 0 },
+            orange: { right: 0 }
+        })
         matchState.status = MATCH_STATUS.ONGOING
     }
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -9,10 +10,12 @@
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/home.css">
+
+    <script src="js/home.js" defer></script>
 </head>
 
 <body>
-    <main class="home-page">
+    <main class="home-page app-page">
         <header class="home-header">
             <h1 class="app-title">Badminton Scorer</h1>
 
@@ -28,7 +31,7 @@
 
         <section class="new-match-section">
             <button class="primary-action-btn new-match-btn" type="button">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
+                <svg class="plus-icon" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M12 5v14"></path>
                     <path d="M5 12h14"></path>
                 </svg>
@@ -96,24 +99,47 @@
 
     <nav class="bottom-nav" aria-label="Main navigation">
         <a class="nav-item active" href="#" aria-current="page">
-            <img src="icons/home-icon.svg" alt="Home">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M12.5 17.4993V10.8327C12.5 10.6117 12.4122 10.3997 12.2559 10.2434C12.0996 10.0871 11.8877 9.99935 11.6667 9.99935H8.33333C8.11232 9.99935 7.90036 10.0871 7.74408 10.2434C7.5878 10.3997 7.5 10.6117 7.5 10.8327V17.4993M2.5 8.33308C2.49994 8.09064 2.55278 7.8511 2.65482 7.63118C2.75687 7.41126 2.90566 7.21625 3.09083 7.05975L8.92417 2.05975C9.22499 1.80551 9.60613 1.66602 10 1.66602C10.3939 1.66602 10.775 1.80551 11.0758 2.05975L16.9092 7.05975C17.0943 7.21625 17.2431 7.41126 17.3452 7.63118C17.4472 7.8511 17.5001 8.09064 17.5 8.33308V15.8331C17.5 16.2751 17.3244 16.699 17.0118 17.0116C16.6993 17.3242 16.2754 17.4997 15.8333 17.4997H4.16667C3.72464 17.4997 3.30072 17.3242 2.98816 17.0116C2.67559 16.699 2.5 16.2751 2.5 15.8331V8.33308Z"
+                    stroke="#3B82F6" stroke-width="2" stroke-linecap="round" />
+            </svg>
             <span>Home</span>
         </a>
 
         <a class="nav-item" href="#">
-            <img src="icons/matches-icon.svg" alt="Matches">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M2.5 4.16602H2.50833M2.5 10H2.50833M2.5 15.834H2.50833M6.66667 4.16602H17.5M6.66667 10H17.5M6.66667 15.834H17.5"
+                    stroke="#94A3B8" stroke-width="2" stroke-linecap="round" />
+            </svg>
             <span>Matches</span>
         </a>
 
         <a class="nav-item" href="#">
-            <img src="icons/players-icon.svg" alt="Players">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M15.834 17.5V15.8333C15.834 14.9493 15.4828 14.1014 14.8576 13.4763C14.2324 12.8512 13.3845 12.5 12.5003 12.5H7.49973C6.61557 12.5 5.76763 12.8512 5.14244 13.4763C4.51725 14.1014 4.16602 14.9493 4.16602 15.8333V17.5M13.3337 5.83333C13.3337 7.67428 11.8412 9.16667 10 9.16667C8.15886 9.16667 6.6663 7.67428 6.6663 5.83333C6.6663 3.99238 8.15886 2.5 10 2.5C11.8412 2.5 13.3337 3.99238 13.3337 5.83333Z"
+                    stroke="#94A3B8" stroke-width="2" stroke-linecap="round" />
+            </svg>
             <span>Players</span>
         </a>
 
         <a class="nav-item" href="#">
-            <img src="icons/more-icon.svg" alt="More">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M9.99998 10.834C10.4602 10.834 10.8332 10.4606 10.8332 10C10.8332 9.53941 10.4602 9.16602 9.99998 9.16602C9.53979 9.16602 9.16673 9.53941 9.16673 10C9.16673 10.4606 9.53979 10.834 9.99998 10.834Z"
+                    stroke="#94A3B8" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M15.8327 10.834C16.2929 10.834 16.666 10.4606 16.666 10C16.666 9.53941 16.2929 9.16602 15.8327 9.16602C15.3725 9.16602 14.9995 9.53941 14.9995 10C14.9995 10.4606 15.3725 10.834 15.8327 10.834Z"
+                    stroke="#94A3B8" stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M4.16723 10.834C4.62743 10.834 5.00048 10.4606 5.00048 10C5.00048 9.53941 4.62743 9.16602 4.16723 9.16602C3.70704 9.16602 3.33398 9.53941 3.33398 10C3.33398 10.4606 3.70704 10.834 4.16723 10.834Z"
+                    stroke="#94A3B8" stroke-width="2" stroke-linecap="round" />
+            </svg>
             <span>More</span>
         </a>
     </nav>
 </body>
+
 </html>

@@ -15,6 +15,60 @@
     font-weight: bold;
 }
 
+.player-add-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.7rem;
+    padding: 0.65rem;
+}
+
+.player-add-input {
+    width: 100%;
+    min-height: 2.5rem;
+    padding: 0 0.7rem;
+    background: var(--card-bg-color);
+    color: #f8fafc;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.45rem;
+    font-family: var(--secondary-font);
+    font-size: 0.78rem;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.player-add-input:focus {
+    border-color: var(--primary-color);
+}
+
+.player-add-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.player-add-submit,
+.player-add-cancel {
+    width: auto;
+    min-height: 2.2rem;
+    padding: 0.4rem 0.7rem;
+    border-radius: 0.45rem;
+    font-family: var(--secondary-font);
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.player-add-cancel {
+    background: var(--card-bg-color);
+}
+
+.player-add-error {
+    color: #f87171;
+    font-family: var(--secondary-font);
+    font-size: 0.7rem;
+    line-height: 1.4;
+}
+
 #start-match-btn {
     width: 15rem;
     height: 3rem;

@@ -1,0 +1,115 @@
+#team-overview-section {
+    gap: 3rem;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.team-overview-options {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: min(100%, 34rem);
+}
+
+.overview-option {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.team-select-dropdown {
+    height: 3rem;
+    box-sizing: border-box;
+}
+
+.matches-option {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 7rem;
+    align-items: center;
+    gap: 1rem;
+}
+
+.matches-input {
+    height: 3rem;
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 0.8rem;
+}
+
+.add-item-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.7rem;
+    padding: 0.65rem;
+}
+
+.add-item-input {
+    width: 100%;
+    min-height: 2.5rem;
+    padding: 0 0.7rem;
+    background: var(--card-bg-color);
+    color: #f8fafc;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.45rem;
+    font-family: var(--secondary-font);
+    font-size: 0.78rem;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.add-item-input:focus {
+    border-color: var(--primary-color);
+}
+
+.add-item-input::placeholder {
+    color: var(--option-header-color);
+}
+
+.team-add-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.add-item-submit,
+.overview-cancel {
+    width: auto;
+    min-height: 2.2rem;
+    padding: 0.4rem 0.7rem;
+    border-radius: 0.45rem;
+    font-family: var(--secondary-font);
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.overview-cancel {
+    background: var(--card-bg-color);
+}
+
+.team-add-error,
+.form-error {
+    color: #f87171;
+    font-family: var(--secondary-font);
+    font-size: 0.7rem;
+    line-height: 1.4;
+}
+
+.team-add-error {
+    margin-top: -0.25rem;
+}
+
+.form-error {
+    width: min(100%, 34rem);
+    margin: -1.5rem 0 0;
+}
+
+.overview-submit {
+    width: min(100%, 16rem);
+}
+
+@media (min-width: 600px) {
+    #team-overview-section {
+        padding-top: 3rem;
+    }
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Overview</title>
+
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/team-overview.css">
+
+    <script src="js/team-overview.js" defer></script>
+</head>
+
+<body>
+    <form class="section" id="team-overview-section" novalidate>
+        <header class="section-heading">
+            Team Overview
+            <hr class="line">
+        </header>
+
+        <section class="team-overview-options">
+            <div class="overview-option">
+                <label class="header green-player" for="team-green-select">Team Green</label>
+                <div class="select-wrapper" id="team-green-option"></div>
+            </div>
+
+            <div class="overview-option">
+                <label class="header orange-player" for="team-orange-select">Team Orange</label>
+                <div class="select-wrapper" id="team-orange-option"></div>
+            </div>
+
+            <div class="overview-option matches-option">
+                <label class="header" for="number-of-matches">Number of matches</label>
+                <input class="input-box matches-input" id="number-of-matches" type="number" min="1" step="1" inputmode="numeric" placeholder="Ex: 3" required>
+            </div>
+        </section>
+
+        <p class="form-error" id="team-overview-error" role="alert" hidden></p>
+
+        <button class="primary-action-btn overview-submit" type="submit">Continue</button>
+    </form>
+</body>
+
+</html>

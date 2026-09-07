@@ -1,0 +1,426 @@
+/* Create Tournament page */
+
+:root {
+    --create-bg: #0d0f14;
+    --create-card: #191c24;
+    --create-input: #191c24;
+    --create-player: #151821;
+    --create-border: rgba(255, 255, 255, 0.06);
+    --create-muted: #94a3b8;
+    --create-placeholder: #566174;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    background: var(--create-bg);
+}
+
+.form-section {
+    margin-bottom: 1.2rem;
+}
+
+.section-label {
+    display: block;
+    margin: 0 0 0.55rem;
+    color: var(--create-muted);
+    font-family: var(--primary-font);
+    font-size: 0.67rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+}
+
+.text-input,
+.date-input {
+    width: 100%;
+    height: 3.15rem;
+    box-sizing: border-box;
+    background: var(--create-input);
+    color: #f8fafc;
+    border: 1px solid var(--create-border);
+    border-radius: 0.75rem;
+    font-family: var(--secondary-font);
+    font-size: 0.82rem;
+    outline: none;
+}
+
+.text-input {
+    padding: 0 0.9rem;
+}
+
+.text-input::placeholder {
+    color: var(--create-placeholder);
+}
+
+.text-input:focus {
+    border-color: var(--primary-color);
+}
+
+.date-input {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0 0.85rem;
+    text-align: left;
+    cursor: pointer;
+}
+
+.date-input:hover,
+.date-input[aria-expanded="true"] {
+    border-color: var(--primary-color);
+}
+
+.calendar-icon,
+.date-chevron {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    color: var(--primary-color);
+}
+
+.calendar-icon svg {
+    width: 1.05rem;
+    height: 1.05rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.date-value {
+    flex: 1;
+    color: #f8fafc;
+    font-weight: 600;
+}
+
+.tournament-type-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+}
+
+.tournament-type-card {
+    min-height: 3.15rem;
+    padding: 0.75rem;
+    background: var(--create-input);
+    color: var(--create-muted);
+    border: 1px solid var(--create-border);
+    border-radius: 0.75rem;
+    font-family: var(--secondary-font);
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.tournament-type-card:hover,
+.tournament-type-card.selected {
+    background: var(--primary-card-bg);
+    color: #ffffff;
+    border-color: var(--primary-color);
+}
+
+.tournament-type-card:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.date-chevron svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.calendar-picker {
+    margin-top: 1rem;
+    padding: 1.05rem;
+    background: #151821;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 1rem;
+    box-shadow: 0 0.6rem 1.5rem rgba(0, 0, 0, 0.25);
+}
+
+.calendar-picker[hidden] {
+    display: none;
+}
+
+.calendar-header {
+    display: grid;
+    grid-template-columns: 2rem 1fr 2rem;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.95rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.calendar-header h2 {
+    margin: 0;
+    color: #f8fafc;
+    font-family: var(--primary-font);
+    font-size: 0.95rem;
+    font-weight: 800;
+    text-align: center;
+}
+
+.calendar-nav-btn {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    background: #1b1f29;
+    color: #f8fafc;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.calendar-nav-btn svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.calendar-weekdays,
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+}
+
+.calendar-weekdays {
+    margin-top: 0.95rem;
+    color: var(--create-muted);
+    font-family: var(--secondary-font);
+    font-size: 0.62rem;
+    font-weight: 500;
+}
+
+.calendar-days {
+    row-gap: 0.15rem;
+    margin-top: 0.45rem;
+}
+
+.calendar-day {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 2rem;
+    padding: 0;
+    background: transparent;
+    color: #f1f5f9;
+    border: none;
+    border-radius: 999px;
+    font-family: var(--secondary-font);
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.calendar-day:hover {
+    background: rgba(59, 130, 246, 0.15);
+}
+
+.calendar-day.other-month {
+    color: #4b5563;
+}
+
+.calendar-day.selected {
+    background: var(--primary-color);
+    color: #ffffff;
+}
+
+.calendar-day.today:not(.selected) {
+    box-shadow: inset 0 0 0 1px var(--primary-color);
+}
+
+.teams-section {
+    margin-top: 0.15rem;
+}
+
+.teams-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.team-card {
+    padding: 0.85rem 0.85rem 0.7rem 1.65rem;
+    background: var(--create-card);
+    border: 1px solid var(--create-border);
+    border-radius: 0.8rem;
+}
+
+.team-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 1.7rem;
+}
+
+.team-header::before {
+    content: "";
+    position: absolute;
+    left: -0.8rem;
+    width: 0.22rem;
+    height: 1.05rem;
+    border-radius: 999px;
+    background: var(--primary-color);
+}
+
+.team-name {
+    color: #f8fafc;
+    font-family: var(--secondary-font);
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.players-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 0.55rem;
+}
+
+.player-row {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 2.05rem;
+    padding: 0 0.65rem;
+    background: var(--create-player);
+    border: 1px solid rgba(255, 255, 255, 0.055);
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+    color: #f1f5f9;
+    font-family: var(--secondary-font);
+    font-size: 0.78rem;
+}
+
+.player-row svg {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    fill: none;
+    stroke: var(--create-muted);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.add-item-container {
+    margin-top: 0.7rem;
+}
+
+.add-item-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.65rem 0.8rem;
+    background: transparent;
+    color: var(--primary-color);
+    border: 1px dashed var(--primary-color);
+    border-radius: 0.7rem;
+    font-family: var(--secondary-font);
+    font-size: 0.78rem;
+    font-weight: 650;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+.add-item-btn svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+.add-item-btn:active {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.add-item-form {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    padding: 0.35rem 0.4rem 0.35rem 0.7rem;
+}
+
+.add-item-form-with-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+}
+
+.add-item-field {
+    min-width: 0;
+    flex: 1;
+}
+
+.add-item-input {
+    min-width: 0;
+    flex: 1;
+    padding: 0;
+    background: transparent;
+    color: #f8fafc;
+    border: none;
+    outline: none;
+    font-family: var(--secondary-font);
+    font-size: 0.78rem;
+}
+
+.add-item-input::placeholder {
+    color: var(--create-placeholder);
+}
+
+.add-item-error {
+    display: block;
+    margin-top: 0.3rem;
+    color: var(--create-error);
+    font-family: var(--secondary-font);
+    font-size: 0.65rem;
+    line-height: 1.3;
+}
+
+.add-item-submit {
+    flex-shrink: 0;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.45rem;
+    font-family: var(--secondary-font);
+    font-size: 0.7rem;
+}
+
+.add-item-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.add-item-cancel {
+    width: auto;
+    min-height: 0;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.45rem;
+    font-family: var(--secondary-font);
+    font-size: 0.7rem;
+}
+
+@media (min-width: 600px) {
+    .create-tournament-page {
+        padding-top: 2rem;
+    }
+}
