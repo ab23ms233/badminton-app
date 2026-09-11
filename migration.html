@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importing Inter-batch 2025</title>
+
+    <script type="module" src="js//db/create-db.js" defer></script>
+    <!-- <script type="module" src="js//db/import_interbatch_2025.js" defer></script> -->
+
+    <!-- <script type="module">
+        import { importInterBatch2025 } from "./js/import_interbatch_2025.js"
+
+        const status = document.createElement("pre")
+        document.body.appendChild(status)
+
+        importInterBatch2025()
+            .then(result => {
+                status.textContent = `Import completed:\n${JSON.stringify(result, null, 2)}`
+            })
+            .catch(error => {
+                console.error(error)
+                status.textContent = `Import failed: ${error.message}`
+            })
+    </script> -->
+</head>
+<body>
+    <div class="status"></div>
+</body>
+</html>
