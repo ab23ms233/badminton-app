@@ -1,4 +1,4 @@
-// Select tournament page
+import { getTnts } from "./db/database.js"
 
 const tournamentList = document.getElementById("tournament-list")
 const createTournamentBtn = document.getElementById("create-tournament-btn")
@@ -43,7 +43,7 @@ function createTournamentCard(tournament) {
     const card = document.createElement("button")
     card.className = "tournament-card"
     card.type = "button"
-    card.dataset.tournamentId = tournament.id
+    card.dataset.tournamentId = tournament.tntId
 
     const header = document.createElement("div")
     header.className = "tournament-card-header"
@@ -65,9 +65,10 @@ function createTournamentCard(tournament) {
     startDate.textContent = `Starts ${formatStartDate(tournament.startDate)}`
 
     const metadata = document.createElement("strong")
-    const teamCount = tournament.teams?.length ?? 0
-    const matchCount = tournament.matches ?? 0
-    metadata.textContent = `${teamCount} teams | ${matchCount} matches`
+    metadata.textContent = tournament.category
+    // const teamCount = tournament.teams?.length ?? 0
+    // const matchCount = tournament.matches ?? 0
+    // metadata.textContent = `${teamCount} teams | ${matchCount} matches`
 
     footer.append(startDate, metadata)
     card.append(header, footer)
@@ -75,10 +76,7 @@ function createTournamentCard(tournament) {
     card.addEventListener("click", () => {
         sessionStorage.setItem(
             "selectedTournament",
-            JSON.stringify({
-                id: tournament.id,
-                name: tournament.name
-            })
+            JSON.stringify(tournament)
         )
 
         window.location.href = "team-overview.html"
@@ -87,10 +85,8 @@ function createTournamentCard(tournament) {
     return card
 }
 
-function renderTournamentCards() {
-    const storedTournaments = JSON.parse(
-        localStorage.getItem("tournaments") || "[]"
-    )
+async function renderTournamentCards() {
+    const storedTournaments = await getTnts()
 
     const tournaments = storedTournaments.length
         ? [...storedTournaments].reverse()

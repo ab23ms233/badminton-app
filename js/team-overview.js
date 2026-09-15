@@ -1,17 +1,22 @@
+import {
+    getTntTeams,
+    saveTeams
+} from "./db/database.js"
+
 const ADD_TEAM_VALUE = "__add-team__"
 
-const selectedTournament = JSON.parse(
+const tournament = JSON.parse(
     sessionStorage.getItem("selectedTournament") || "null"
 )
 
-const tournaments = JSON.parse(
-    localStorage.getItem("tournaments") || "[]"
-)
+// const tournaments = await getTnts()
 
-const tournament = tournaments.find(item => item.id === selectedTournament?.id)
-const teams = tournament?.teams || []
+// const tournament = tournaments.find(item => item.tntId === selectedTournament?.tntId)
+const teams = await getTntTeams()
 const teamOverviewForm = document.getElementById("team-overview-section")
 const overviewError = document.getElementById("team-overview-error")
+
+const newTeams = []
 
 function createTeamDropDown(teamId) {
     const wrapper = document.createElement("div")
@@ -122,7 +127,7 @@ function showAddTeamForm(teamId, wrapper) {
     errorMessage.className = "team-add-error"
     errorMessage.hidden = true
 
-    addButton.addEventListener("click", () => {
+    addButton.addEventListener("click", async() => {
         const teamName = input.value.trim()
         const normalizedName = teamName.toLowerCase()
 
@@ -140,19 +145,15 @@ function showAddTeamForm(teamId, wrapper) {
             return
         }
 
-        const newTeam = {
-            id: crypto.randomUUID(),
-            name: teamName,
-            players: []
-        }
+        await saveTntTeams(teamName)
 
-        teams.push(newTeam)
-        saveTournamentTeams()
         const select = wrapper.querySelector("select")
         const addTeamOption = select.querySelector(`option[value="${ADD_TEAM_VALUE}"]`)
         const teamOption = document.createElement("option")
+
         teamOption.value = teamName
         teamOption.textContent = teamName
+
         select.insertBefore(teamOption, addTeamOption)
         select.value = teamName
         refreshTeamDropdowns()
@@ -169,17 +170,21 @@ function showAddTeamForm(teamId, wrapper) {
     input.focus()
 }
 
-function saveTournamentTeams() {
-    if (!tournament) {
-        return
+async function saveTntTeams(teamName) {
+    const newTeam = {
+        teamId: crypto.randomUUID(),
+        name: teamName,
+        players: []
     }
 
-    const tournamentIndex = tournaments.findIndex(item => item.id === tournament.id)
-    tournaments[tournamentIndex].teams = teams
-    tournaments[tournamentIndex].updatedAt = new Date().toISOString()
-    localStorage.setItem("tournaments", JSON.stringify(tournaments))
-}
+    teams.push(newTeam)
+    newTeams.push(newTeam)
 
+    if (tournament) {
+        await saveTeams(tournament.tntId, newTeams)
+    }
+
+}
 function showOverviewError(message) {
     overviewError.textContent = message
     overviewError.hidden = false
@@ -213,7 +218,7 @@ teamOverviewForm.addEventListener("submit", event => {
         JSON.stringify({
             green: teamGreen.value,
             orange: teamOrange.value,
-            numberOfMatches
+            numMatches: numberOfMatches
         })
     )
 

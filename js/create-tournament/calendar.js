@@ -11,7 +11,7 @@ export const calendarPicker = document.getElementById("calendar-picker")
 const dateValue = document.getElementById("date-value")
 const today = new Date()
 
-let selectedDate = new Date(
+export let selectedDate = new Date(
     today.getFullYear(),
     today.getMonth(),
     today.getDate()

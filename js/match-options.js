@@ -71,7 +71,6 @@ function createSetsDropDown(numSets, defaultSet) {
 
         // Set the default selected value
         if (set === defaultSet) {
-            console.log(set)
             option.selected = true
         }
 

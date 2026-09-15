@@ -1,103 +1,109 @@
-import {
-    tournamentNameInput,
-    tournamentCategorySelect,
-} from "./controls.js"
+import { openDB } from "../db/database.js"
 
-import { selectedTournamentType } from "./ui.js"
-import { teams } from "./team-form.js"
-
-
-export function onCreateTnt(event) {
-    event.preventDefault()
-    const name = tournamentNameInput.value.trim()
-
-    if (!name) {
-        tournamentNameInput.classList.add("input-error")
-        tournamentNameInput.focus()
-        return
+export async function saveTnt(tournament) {
+    if (!Object.hasOwn(tournament, "createdAt")) {
+        tournament.createdAt = new Date().toISOString()
+    }
+    if (!Object.hasOwn(tournament, "tntId")) {
+        tournament.tntId = crypto.randomUUID()
     }
 
-    tournamentNameInput.classList.remove("input-error")
-    const now = new Date().toISOString()
+    const db = await openDB()
 
-    const tournament = {
-        tournamentId: crypto.randomUUID(),
-        name: name,
-        startDate: toISODate(selectedDate),
-        type: selectedTournamentType,
-        category: tournamentCategorySelect.value,
-        status: "ACTIVE",
-        createdAt: now,
-    }
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction("tournaments", "readwrite")
+        const tntStore = transaction.objectStore("tournaments")
 
-    const request = indexedDB.open("badminton-scorer", 1)
+        const getRequest = tntStore.getAll()
 
-    request.onsuccess = (event) => {
-        console.log("Database opened successfully")
+        getRequest.onsuccess = () => {
+            const addedTnts = getRequest.result
+            const addedTntNames = addedTnts.map(tnt => tnt.name)
 
-        const db = event.target.result
-        saveTnt(db, tournament)
-    }
+            if (!addedTntNames.includes(tournament.name)) {
+                const addRequest = tntStore.add(tournament)
 
-    request.onerror = (event) => {
-        console.error(`Failed to open DB: ${event.target.error}`)
-    }
-}
+                addRequest.onsuccess = () => {
+                    console.log(`Added ${tournament.name} to DB.`)
+                }
 
-async function saveTnt(db, tournament) {
-    // console.log("Database open request created")
-
-    const transaction = db.transaction("tournaments", "readwrite")
-    const tntStore = transaction.objectStore("tournaments")
-
-    // console.log("Tournament store obtained")
-
-    const getRequest = tntStore.getAll()
-
-    getRequest.onsuccess = () => {
-        console.log("Tournaments read successfully.")
-
-        const addedTnts = getRequest.result
-        const addedTntNames = addedTnts.map(tnt => tnt.name)
-
-        if (!addedTntNames.includes(tournament.name)) {
-            tntStore.add(tournament)
-            console.log(`Added ${tournament.name} to DB.`)
-        } else {
-            console.log(`Tournament ${tournament.name} already exists.`)
+                addRequest.onerror = () => {
+                    reject(addRequest.error)
+                }
+            } else {
+                console.log(`Tournament ${tournament.name} already exists.`)
+            }
         }
-    }
 
-    getRequest.onerror = (event) => {
-        console.error(`Error reading tournaments: ${event.target.error}`)
-    }
+        getRequest.onerror = () => {
+            reject(getRequest.error)
+        }
 
-    transaction.oncomplete = () => {
-        console.log("Transaction completed successfully.")
-    }
+        transaction.oncomplete = () => {
+            console.log("Transaction completed successfully.")
+            resolve()
+        }
 
-    transaction.onerror = (event) => {
-        console.error(`Error adding ${tournament.name}: ${event.target.error}`)
-    }
+        transaction.onerror = () => {
+            reject(transaction.error)
+        }
+    })
 }
 
+export async function saveTeamPlayers(teams) {
+    const db = await openDB()
 
-function saveTeams(db, tournament, teams) {
-    teams.forEach(team => {
-        team.tournamentId = tournament.tournamentId
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction("players", "readwrite")
+        const playerStore = transaction.objectStore("players")
+
+        const index = playerStore.index("name_gender")
+
+        teams.forEach(team => {
+            team.players.forEach(player => {
+                const getRequest = index.get([
+                    player.name,
+                    player.gender
+                ])
+
+                getRequest.onsuccess = () => {
+                    if (getRequest.result) {
+                        console.log(`${player.name} already exists in players.`)
+                        
+                        const playerId = getRequest.result.playerId
+                        player.playerId = playerId
+                    } else {
+                        const playerToAdd = {
+                            playerId: crypto.randomUUID(),
+                            name: player.name,
+                            gender: player.gender,
+                            createdAt: new Date().toISOString()
+                        }
+  
+                        const addRequest = playerStore.add(playerToAdd)
+
+                        addRequest.onsuccess = () => {
+                            console.log(`Added ${player.name} to players successfully.`)
+                            player.playerId = playerToAdd.playerId
+                        }
+                        addRequest.onerror = () => {
+                            reject(addRequest.error)
+                        }
+                    }
+                }
+
+                getRequest.onerror = () => {
+                    reject(getRequest.error)
+                }
+            })
+        })
+
+        transaction.oncomplete = () => {
+            // console.log("Player transaction completed successfully.")
+            resolve(true)
+        }
+        transaction.onerror = () => {
+            reject(transaction.error)
+        }
     })
-
-    const transaction = db.transaction("tournamentTeams", "readwrite")
-    const tntTeamStore = transaction.objectStore("tournamentTeams")
-
-    const getRequest = tntTeamStore.getAll()
-
-    getRequest.onsuccess = () => {
-        console.log("Teams read successfully.")
-
-        const addedTeams = getRequest.result
-        const tntIds = addedTeams.map(team => team.tournamentId)
-        const teamNames = addedTeams
-    }
-
 }

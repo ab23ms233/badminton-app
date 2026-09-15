@@ -1,11 +1,10 @@
 import { 
     teams,
-    createAddForm,
-    addPlayer
+    createAddForm
 } from "./team-form.js"
 
 const teamsList = document.getElementById("teams-list")
-export let selectedTournamentType = "Team based"
+
 
 function createPlayerIcon() {
     const icon = document.createElementNS(
@@ -73,20 +72,11 @@ function createAddPlayerButton(team) {
         container.replaceChildren(
             createAddForm(
                 "player",
-                name => {
-                    players.push({
-                        id: crypto.randomUUID(),
-                        name
-                    })
-
-                    renderTeams()
-                },
                 "Enter player name",
-                () => container.replaceChildren(createAddPlayerButton(team))
+                () => container.replaceChildren(createAddPlayerButton(team)),
+                team.name
             )
         )
-
-        addPlayer(name, )
         container.querySelector("input").focus()
     })
 

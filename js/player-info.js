@@ -1,3 +1,8 @@
+import {
+    getTntTeam,
+    getTeamPlayers
+} from "./db/database.js"
+
 const teamIds = ["green", "orange"]
 const ADD_PLAYER_VALUE = "__add-player__"
 
@@ -8,23 +13,15 @@ const teamOverviewConfig = JSON.parse(
 const matchConfig = JSON.parse(
     sessionStorage.getItem("matchConfig") || "null"
 )
-const selectedTournament = JSON.parse(
+const tournament = JSON.parse(
     sessionStorage.getItem("selectedTournament") || "null"
 )
-const tournaments = JSON.parse(
-    localStorage.getItem("tournaments") || "[]"
-)
-const tournament = tournaments.find(item => item.id === selectedTournament?.id)
+
 const type = matchConfig?.type?.toLowerCase() || "singles"
 
 // Extract team names from Team Overview
 const greenTeam = teamOverviewConfig?.green || matchConfig?.green || ""
 const orangeTeam = teamOverviewConfig?.orange || matchConfig?.orange || ""
-
-function getTeamPlayers(teamName) {
-    const team = tournament?.teams?.find(item => item.name === teamName)
-    return team?.players || []
-}
 
 function getTeam(teamName) {
     return tournament?.teams?.find(item => item.name === teamName)
@@ -43,7 +40,7 @@ const startMatchBtn = document.getElementById("start-match-btn")
 startMatchBtn.addEventListener("click", recordPlayerNames)
 
 // Creates a dropdown menu for selecting a player from the team
-function createPlayerDropDown(teamId, num) {
+async function createPlayerDropDown(teamId, num) {
     // Determine which team name to use
     let teamName
     if (teamId === "green") {
@@ -72,7 +69,7 @@ function createPlayerDropDown(teamId, num) {
     select.appendChild(placeholder)
 
     // Populate dropdown with available players from the team
-    const playerList = getTeamPlayers(teamName)
+    const playerList = await getTeamPlayers(tournament.tntId, teamName)
     playerList.forEach(player => {
         const option = document.createElement("option")
         const playerName = typeof player === "string" ? player : player.name
@@ -97,6 +94,7 @@ function createPlayerDropDown(teamId, num) {
     wrapper.appendChild(select)
     return wrapper
 }
+
 
 function showAddPlayerForm(teamName, wrapper, select) {
     wrapper.querySelector(".player-add-form")?.remove()
@@ -128,10 +126,10 @@ function showAddPlayerForm(teamName, wrapper, select) {
     cancelButton.type = "button"
     cancelButton.textContent = "Cancel"
 
-    addButton.addEventListener("click", () => {
+    addButton.addEventListener("click", async() => {
         const playerName = input.value.trim()
         const normalizedName = playerName.toLowerCase()
-        const team = getTeam(teamName)
+        const team = await getTntTeam(tournament.tntId, teamName)
 
         if (!playerName) {
             errorMessage.textContent = "Please enter a player name."
@@ -157,8 +155,12 @@ function showAddPlayerForm(teamName, wrapper, select) {
         }
 
         const newPlayer = {
-            id: crypto.randomUUID(),
-            name: playerName
+            teamPlayerId: crypto.randomUUID(),
+            name: playerName,
+            gender: 
+            matchConfig.category === "Men's"
+            ? "M"
+            : "W"
         }
 
         team.players.push(newPlayer)

@@ -1,10 +1,26 @@
 import { renderTeams } from "./ui.js"
+import { saveTeams } from "../db/database.js"
+import { toISODate } from "./utils.js"
+
+import {
+    tournamentNameInput,
+    tournamentCategorySelect
+} from "./controls.js"
+
+import {
+    saveTnt,
+    saveTeamPlayers
+} from "./save-tournament.js"
+
+import { selectedDate } from "./calendar.js"
+
 
 const addTeamContainer = document.getElementById("add-team-container")
-export const teams = []
-const players = []
+export let selectedTournamentType = "Team based"
 
-export function createAddForm(type, onSubmit, placeholder, onCancel) {
+export const teams = []
+
+export function createAddForm(type, placeholder, onCancel, teamName) {
     const form = document.createElement("form")
     const hasActions = type === "team" || onCancel
     form.className = `add-item-form${hasActions ? " add-item-form-with-actions" : ""}`
@@ -54,7 +70,6 @@ export function createAddForm(type, onSubmit, placeholder, onCancel) {
 
     form.addEventListener("submit", event => {
         event.preventDefault()
-
         const name = input.value.trim()
 
         if (!name) {
@@ -72,9 +87,7 @@ export function createAddForm(type, onSubmit, placeholder, onCancel) {
         const duplicatePlayer =
             type === "player" &&
             teams.some(team =>
-                team.players.some(player =>
-                    player.name.toLowerCase() === normalizedName
-                )
+                team.players.some(player => player.name.toLowerCase() === normalizedName)
             )
 
         if (duplicateTeam || duplicatePlayer) {
@@ -90,7 +103,14 @@ export function createAddForm(type, onSubmit, placeholder, onCancel) {
 
         input.classList.remove("input-error")
         errorMessage.hidden = true
-        onSubmit(name)
+
+        if (type === "team") {
+            addTeam(name)
+        } else if (type === "player") {
+            addPlayer(name, teamName)
+        }
+
+        renderTeams()
     })
 
     input.addEventListener("input", () => {
@@ -108,7 +128,6 @@ export function createAddTeamForm() {
     addTeamContainer.replaceChildren(
         createAddForm(
             "team",
-            name => addTeam(name),
             "Enter team name"
         )
     )
@@ -165,6 +184,56 @@ function resetAddTeamButton() {
     addTeamContainer.replaceChildren(button)
 }
 
-export function addPlayer(player) {
-    players.add(player)
+export async function onCreateTnt(event) {
+    event.preventDefault()
+    const name = tournamentNameInput.value.trim()
+
+    if (!name) {
+        tournamentNameInput.classList.add("input-error")
+        tournamentNameInput.focus()
+        return
+    }
+
+    tournamentNameInput.classList.remove("input-error")
+    const now = new Date().toISOString()
+
+    const tournament = {
+        tntId: crypto.randomUUID(),
+        name: name,
+        startDate: toISODate(selectedDate),
+        type: selectedTournamentType,
+        category: tournamentCategorySelect.value,
+        status: "ACTIVE",
+        createdAt: now
+    }
+
+    try {
+        await saveTnt(tournament)
+        await saveTeamPlayers(teams)
+        await saveTeams(tournament.tntId, teams)
+
+        window.location.href = "select-tournament.html"
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export function addPlayer(name, teamName) {
+    const gender =
+        tournamentCategorySelect.value === "Men's" ? "M" : "W"
+    console.log(name, teamName)
+
+    teams.forEach(team => {
+        if (team.name === teamName) {
+            if (team.players.some(player => player.name === name)) {
+                console.log(`${name} already exists in ${teamName}.`)
+            } else {
+                team.players.push({
+                    teamPlayerId: crypto.randomUUID(),
+                    name: name,
+                    gender: gender
+                })
+            }
+        }
+    })
 }

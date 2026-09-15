@@ -1,12 +1,13 @@
-import { createAddTeamForm } from "./team-form.js"
-import { 
+import {  createAddTeamForm } from "./team-form.js"
+
+import {
     toggleCalendar,
     renderCalendar,
     calendarMonthDate,
     calendarPicker
 } from "./calendar.js"
 
-import { onCreateTnt } from "./save-tournament.js"
+import { onCreateTnt } from "./team-form.js"
 
 export const tournamentNameInput = document.getElementById("tournament-name")
 export const tournamentForm = document.getElementById("tournament-form")
